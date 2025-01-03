@@ -1,0 +1,35 @@
+﻿@model IEnumerable<Introductory.Models.UserGroup>
+
+
+@{
+    ViewData["Title"] = "Privacy Policy";
+}
+<h1>Welcome to privacy policy page</h1>
+
+<div class="row">
+    <div class="col-md-4">
+        <table class="table table-hover table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Code</th>
+                    <th>Created Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (UserGroup item in Model)
+                {
+                    <tr>
+                        <td>@item.UserGroupID</td>
+                        <td>@item.UserGroupName</td>
+                        <td>@item.UserGroupCode</td>
+                        <td>@item.CreatedDate.ToShortDateString()</td>
+                    </tr>
+
+
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
