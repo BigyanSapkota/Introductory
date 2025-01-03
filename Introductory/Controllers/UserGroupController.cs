@@ -17,8 +17,19 @@ namespace Introductory.Controllers
         }
 
         public IActionResult Setup()
-        {
+        {  
             return View();
         }
+
+
+        public IActionResult SetupNew()
+        {
+
+            return View();
+        }
+
+
+
+
     }
 }

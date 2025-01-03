@@ -107,11 +107,11 @@
             var code = $('.txtCode').val();
 
             if (name == '') {
-                alert('Enter User Group Name')
+                toastr["error"]("Enter User Group Name", "Error")
             } else if (code == '') {
-                alert('Enter User Group Code')
-            } else { 
-                alert('GOOD')
+                toastr["error"]("Enter User Group Code", "Error")
+            } else {
+                toastr["success"]("GOOD", "OK")
             }
         })
 
