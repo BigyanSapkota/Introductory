@@ -54,7 +54,7 @@
                                         <td>@item.UserGroupCode</td>
                                         <td>
                                             <button type="button" class="btn btn-warning btn-sm">Edit</button>
-                                            <button type="button" class="btn btn-danger btn-sm">Delete</button>
+                                            <button type="button" class="btn btn-danger btn-sm btnDelete" data-key="@item.UserGroupID">Delete</button>
                                         </td>
                                     </tr>
                                 }
@@ -100,9 +100,9 @@
 
 @section LocalScripts {
     <script>
-        $(document).ready(function () {})
+        $(document).ready(function () { })
 
-        $(document).on("click", "#btnSave", function () { 
+        $(document).on("click", "#btnSave", function () {
             var name = $('.txtName').val();
             var code = $('.txtCode').val();
 
@@ -111,13 +111,73 @@
             } else if (code == '') {
                 toastr["error"]("Enter User Group Code", "Error")
             } else {
-                toastr["success"]("GOOD", "OK")
+
+                $.ajax({
+                    method: 'get',
+                    contentType: "application/json; charset=utf-8",
+                    url: '@Url.Action("SaveData", "UserGroup")?name=' + name + '&code=' + code,
+                    success: function (res) {
+                        if (res.success == true) {
+                            toastr["success"](res.message, "OK");
+                            clearForm();
+                        } else {
+                            toastr["error"](res.message, "ERROR")
+                        }
+                    },
+                    error: function (err) {
+                        debugger;
+                    },
+                    beforeSend: function () {
+                        $.blockUI();
+                    },
+                    complete: function () {
+                        $.unblockUI();
+                    }
+                });
+
             }
         })
 
         $(document).on('click', '#btnCancel', function () {
-            alert('CANCELLED')
+            var result = confirm("Are you sure to clear data?");
+            if (result == true) {
+                clearForm();
+            }
         })
+
+        function clearForm() {
+            $('.txtName').val("")
+            $('.txtCode').val("")
+        }
+
+        $(document).on('click', '.btnDelete', function () {
+            var id = $(this).data('key');
+            var result = confirm('Are you sure to delete data?');
+            if (result == true) {
+                $.ajax({
+                    method: 'get',
+                    contentType: "application/json; charset=utf-8",
+                    url: '@Url.Action("DeleteData", "UserGroup")?key=' + id,
+                    success: function (res) {
+                        if (res.success == true) {
+                            toastr["success"](res.message, "OK");
+                        } else {
+                            toastr["error"](res.message, "ERROR")
+                        }
+                    },
+                    error: function (err) {
+                        debugger;
+                    },
+                    beforeSend: function () {
+                        $.blockUI();
+                    },
+                    complete: function () {
+                        $.unblockUI();
+                    }
+                })
+            }
+        })
+
 
 
     </script>
