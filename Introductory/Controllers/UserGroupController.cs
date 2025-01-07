@@ -23,7 +23,7 @@ namespace Introductory.Controllers
         }
 
 
-        public JsonResult SaveData(string name, string code)
+        public JsonResult SaveData(int id, string name, string code)
         {
             if (string.IsNullOrEmpty(name))
             {
@@ -43,13 +43,7 @@ namespace Introductory.Controllers
             }
             else
             {
-
-                var duplicateCode = _context
-                                        .UserGroup
-                                        .Where(x => x.UserGroupCode == code)
-                                        .FirstOrDefault();
-
-                if (duplicateCode == null)
+                if (id == 0)
                 {
                     UserGroup ug;
                     ug = new UserGroup();
@@ -66,17 +60,39 @@ namespace Introductory.Controllers
                     var obj = new
                     {
                         Success = true,
-                        Message = "Data Processed Succesfully"
+                        Message = "Data Inserted Succesfully"
                     };
                     return Json(obj);
                 }
                 else
                 {
-                    return Json(new
+                    // update garne
+                    var dbData = _context
+                                    .UserGroup
+                                    .Where(x => x.UserGroupID == id)
+                                    .FirstOrDefault();
+                    if (dbData == null)
                     {
-                        Success =false,
-                        Message = "User Group Code Already Exist for Another Row"
-                    });
+                        var obj = new
+                        {
+                            Success = false,
+                            Message = "Data Not Found in Database"
+                        };
+                        return Json(obj);
+                    }
+                    else
+                    {
+                        dbData.UserGroupName = name;
+                        dbData.UserGroupCode = code;
+
+                        _context.SaveChanges();
+                        var obj = new
+                        {
+                            Success = true,
+                            Message = "Data Modified Successfully"
+                        };
+                        return Json(obj);
+                    }
                 }
             }
 
@@ -110,5 +126,28 @@ namespace Introductory.Controllers
         }
 
 
+        public JsonResult GetUserGroupByID(int key)
+        {
+            var dbData = _context
+                            .UserGroup
+                            .Where(x => x.UserGroupID == key)
+                            .FirstOrDefault();
+            if (dbData == null)
+            {
+                return Json(new
+                {
+                    Success = false,
+                    Message = "Data Not Found In Database"
+                });
+            }
+            else
+            {
+                return Json(new
+                {
+                    Success = true,
+                    Data = dbData
+                });
+            }
+        }
     }
 }

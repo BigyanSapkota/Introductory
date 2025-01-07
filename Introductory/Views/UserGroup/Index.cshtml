@@ -53,7 +53,7 @@
                                         <td>@item.UserGroupName</td>
                                         <td>@item.UserGroupCode</td>
                                         <td>
-                                            <button type="button" class="btn btn-warning btn-sm">Edit</button>
+                                            <button type="button" class="btn btn-warning btn-sm btnEdit" data-key="@item.UserGroupID">Edit</button>
                                             <button type="button" class="btn btn-danger btn-sm btnDelete" data-key="@item.UserGroupID">Delete</button>
                                         </td>
                                     </tr>
@@ -86,6 +86,7 @@
                         <div class="row mt-2">
                             <div class="col-md-3"></div>
                             <div class="col-md-9 text-right">
+                                <input type="hidden" class="hdnId" value="0" />
                                 <button type="button" class="btn btn-success" id="btnSave">SAVE</button>
                                 <button type="button" class="btn btn-danger" id="btnCancel">Cancel</button>
                             </div>
@@ -105,6 +106,7 @@
         $(document).on("click", "#btnSave", function () {
             var name = $('.txtName').val();
             var code = $('.txtCode').val();
+            var id = $('.hdnId').val();
 
             if (name == '') {
                 toastr["error"]("Enter User Group Name", "Error")
@@ -115,7 +117,7 @@
                 $.ajax({
                     method: 'get',
                     contentType: "application/json; charset=utf-8",
-                    url: '@Url.Action("SaveData", "UserGroup")?name=' + name + '&code=' + code,
+                    url: '@Url.Action("SaveData", "UserGroup")?id=' + id + '&name=' + name + '&code=' + code,
                     success: function (res) {
                         if (res.success == true) {
                             toastr["success"](res.message, "OK");
@@ -148,6 +150,7 @@
         function clearForm() {
             $('.txtName').val("")
             $('.txtCode').val("")
+            $('.hdnId').val(0)
         }
 
         $(document).on('click', '.btnDelete', function () {
@@ -178,7 +181,35 @@
             }
         })
 
+        $(document).on('click', '.btnEdit', function () {
+            var id = $(this).data('key');
 
+            $.ajax({
+                method: 'get',
+                contentType: "application/json; charset=utf-8",
+                url: '@Url.Action("GetUserGroupByID", "UserGroup")?key=' + id,
+                success: function (res) {
+                    if (res.success == true) {
+                        $('.txtName').val(res.data.userGroupName);
+                        $('.txtCode').val(res.data.userGroupCode);
+
+                        $('.hdnId').val(res.data.userGroupID);
+                    } else {
+                        toastr["error"](res.message, "ERROR")
+                    }
+                },
+                error: function (err) {
+                    debugger;
+                },
+                beforeSend: function () {
+                    $.blockUI();
+                },
+                complete: function () {
+                    $.unblockUI();
+                }
+            })
+
+        });
 
     </script>
 }
