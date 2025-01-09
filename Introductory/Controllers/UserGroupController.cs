@@ -13,8 +13,7 @@ namespace Introductory.Controllers
         }
         public IActionResult Index()
         {
-            var data = _context.UserGroup.Where(x => x.IsActive == true).ToList();
-            return View(data);
+            return View();
         }
 
         public IActionResult Setup()
@@ -148,6 +147,25 @@ namespace Introductory.Controllers
                     Data = dbData
                 });
             }
+        }
+
+        public JsonResult GetAllData(string name, string code)
+        {
+            var dbData = _context
+                        .UserGroup
+                        .Where(x =>
+                               x.IsActive == true
+                            && (string.IsNullOrEmpty(name) || x.UserGroupName.Contains(name))
+                            && (string.IsNullOrEmpty(code) || x.UserGroupCode.Contains(code))
+                        )
+                        .OrderByDescending(o => o.CreatedDate)
+                        .ToList();
+
+            return Json(new
+            {
+                Success = true,
+                Data = dbData
+            });
         }
     }
 }
