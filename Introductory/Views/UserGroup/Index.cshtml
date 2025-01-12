@@ -1,10 +1,5 @@
 ﻿@section Header {
-    <style>
-        .cust-bg {
-            background-color: silver;
-            color: green;
-        }
-    </style>
+    
 }
 
 <div class="row">
@@ -222,7 +217,7 @@
                             xyz += '<td>' + x.userGroupID + '</td>';
                             xyz += '<td>' + x.userGroupName + '</td>';
                             xyz += '<td>' + x.userGroupCode + '</td>';
-                            xyz += '<td><button type="button" class="btn btn-warning btn-sm mr-2 btnEdit" data-key="' + x.userGroupID + '"><i class="fa fa-edit"></i> Edit</buttion><button type="button" class="btn btn-danger btn-sm btnDelete" data-key="' + x.userGroupID + '"><i class="fa fa-trash"></i> Delete</buttion></td>'
+                            xyz += '<td><button type="button" class="btn btn-warning btn-sm mr-2 btnEdit" data-key="' + x.userGroupID + '"><i class="fa fa-edit"></i> Edit</buttion><button type="button" class="btn btn-danger btn-sm btnDelete" data-key="' + x.userGroupID + '"><i class="fa fa-trash"></i> Delete</buttion><button type="button" class="btn btn-secondary btn-sm btnView" data-key="' + x.userGroupID + '"><i class="fa fa-eye"></i> View</buttion></td>'
                             xyz += '</tr>';
                         });
 
@@ -246,6 +241,33 @@
 
         $(document).on('click', '.btnSearch', function () {
             loadData();
+        });
+
+        $(document).on("click", ".btnView", function () {
+            var id = $(this).data('key');
+            $.ajax({
+                method: 'get',
+                contentType: "application/json; charset=utf-8",
+                url: '@Url.Action("GetUserGroupByID", "UserGroup")?key=' + id,
+                success: function (res) {
+                    if (res.success == true) {
+                        alert(res.data.createdDate);
+                    } else {
+                        toastr["error"](res.message, "ERROR")
+                    }
+                },
+                error: function (err) {
+                    debugger;
+                },
+                beforeSend: function () {
+                    $.blockUI();
+                },
+                complete: function () {
+                    $.unblockUI();
+                }
+            })
+
+
         });
 
     </script>
