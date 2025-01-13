@@ -7,7 +7,6 @@ namespace Introductory.Models
     {
         [Key]
         public int UserGroupID { get; set; }
-
         public string UserGroupName { get; set; }
         public string UserGroupCode { get; set; }
         public DateTime CreatedDate { get; set; }
