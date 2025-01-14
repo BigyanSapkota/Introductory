@@ -7,8 +7,9 @@
     <title>MaterailM Free Bootstrap Admin Template by WrapPixel</title>
     <link rel="shortcut icon" type="image/png" href="~/assets/images/logos/favicon.png" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" integrity="sha512-5A8nwdMOWrSz20fDsjczgUidUBR8liPYU+WymTZP1lmY9G6Oc7HlZv156XqnsgNUzTyMefFTcsFH/tnJE/+xBg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="~/assets/plugins/keithwood_calendarpick/jquery.calendars.picker.css" rel="stylesheet" />
 
-    
+
     <link rel="stylesheet" href="~/assets/css/styles.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
@@ -42,6 +43,17 @@
 
     <script src="~/assets/libs/jquery/dist/jquery.min.js"></script>
     <script src="~/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+
+    <script src="~/assets/plugins/keithwood_calendarpick/jquery.plugin.js"></script>
+    <script src="~/assets/plugins/keithwood_calendarpick/jquery.calendars.js"></script>
+    <script src="~/assets/plugins/keithwood_calendarpick/jquery.calendars.plus.js"></script>
+    <script src="~/assets/plugins/keithwood_calendarpick/jquery.calendars.picker.js"></script>
+    <script src="~/assets/plugins/keithwood_calendarpick/jquery.calendars.picker.ext.js"></script>
+    <script src="~/assets/plugins/keithwood_calendarpick/jquery.calendars.nepali.js"></script>
+    <script src="~/assets/plugins/keithwood_calendarpick/jquery.calendars.nepali-ne.js"></script>
+
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="~/js/blockui.js"></script>
     <script src="~/assets/js/sidebarmenu.js"></script>
@@ -69,6 +81,14 @@
             "showMethod": "fadeIn",
             "hideMethod": "fadeOut"
         }
+
+        $('.nepdate-picker').calendarsPicker({
+            dateFormat: 'yyyy-mm-dd',
+            calendar: $.calendars.instance('nepali', "ne"),
+            onSelect: function () {
+                $(this).trigger('change');
+            }
+        });
     </script>
 
     @RenderSection("LocalScripts", required: false)

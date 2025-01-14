@@ -22,10 +22,10 @@ namespace Introductory.Controllers
 
        
 
-        [HttpPost]
-        public JsonResult Save([FromBody] UsersVM model)
-        { 
+        //[HttpPost]
+        //public JsonResult Save([FromBody] UsersVM model)
+        //{ 
         
-        }
+        //}
     }
 }
