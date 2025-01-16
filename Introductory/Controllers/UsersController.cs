@@ -1,7 +1,10 @@
 ﻿using Introductory.DAO;
+using Introductory.Helper;
+using Introductory.Models;
 using Introductory.Models.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.Identity.Client;
 
 namespace Introductory.Controllers
 {
@@ -20,12 +23,101 @@ namespace Introductory.Controllers
         }
 
 
-       
 
-        //[HttpPost]
-        //public JsonResult Save([FromBody] UsersVM model)
-        //{ 
-        
-        //}
+
+        [HttpPost]
+        public JsonResult Save([FromBody] UsersVM vm)
+        {
+            if (string.IsNullOrEmpty(vm.Username))
+            {
+                return Json(new
+                {
+                    Success = false,
+                    Message = "Enter User Name"
+                });
+            }
+            else if (vm.UserGroupId == 0)
+            {
+                return Json(new
+                {
+                    Success = false,
+                    Message = "Select User Group Name"
+                });
+            }
+            else if (vm.Password != vm.ConfirmPassword)
+            {
+                return Json(new
+                {
+                    Success = false,
+                    Message = "Password Not Matched"
+                });
+            }
+            else
+            {
+                var oldUser = _context
+                                .Users
+                                .Where(x => x.Username == vm.Username)
+                                .FirstOrDefault();
+                if (oldUser != null)
+                {
+                    return Json(new
+                    {
+                        Success = false,
+                        Message = "Username Already Exists in Database"
+                    });
+                }
+                else
+                {
+                    Users dbMdl = new Users()
+                    {
+                        Username = vm.Username.ToText(),
+                        Password = vm.Password.ToText(),
+                        UserGroupId = vm.UserGroupId.ToInt32(),
+                        Fullname = vm.Fullname.ToText(),
+                        Address = vm.Address.ToText(),
+                        Email = vm.Email.ToText(),
+                        ContactNo = vm.ContactNo.ToText(),
+                        ValidFrom = vm.ValidFrom.ToEnglishDate(),
+                        ValidTo = vm.ValidTo.ToEnglishDate(),
+                    };
+
+                    _context.Users.Add(dbMdl);
+
+                    _context.SaveChanges();
+                    return Json(new
+                    {
+                        Success = true,
+                        Message = "Users Registered Successfully!!!"
+                    });
+                }
+            }
+        }
+
+
+
+        [HttpPost]
+        public JsonResult GetAllData([FromBody] UsersVM vm)
+        {
+            List<UsersVM> dbData = _context
+                                    .Users
+                                    .Select(s => new UsersVM
+                                    {
+                                        Username = s.Username.ToText(),
+                                        Address = s.Address.ToText(),
+                                        ContactNo = s.ContactNo.ToText(),
+                                        Email = s.Email.ToText(),
+                                        Fullname = s.Fullname.ToText(),
+                                        UserGroupId = s.UserGroupId.ToInt32(),
+                                        UserID = s.UserID.ToInt32(),
+                                        ValidFrom = s.ValidFrom.ToNepaliDate(),
+                                        ValidTo = s.ValidTo.ToNepaliDate(),
+                                    })
+                                    .ToList();
+            return Json(new
+            {
+                Success = true,
+                Data = dbData
+            });
+        }
     }
 }
