@@ -1,0 +1,223 @@
+﻿
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label>Username</label><br />
+                        <input type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-3">
+                        <label>Contact No</label><br />
+                        <input type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-3">
+                        <br />
+                        <button type="button" class="btn btn-primary">
+                            <i class="fa fa-search"></i> Search
+                        </button>
+                        <button type="button" class="btn btn-success btnNew">
+                            <i class="fa fa-plus"></i> NEW
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>SN</th>
+                            <th>Username</th>
+                            <th>Fullname</th>
+                            <th>Email</th>
+                            <th>Contact No</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="mdlSetup" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Users Setup</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-3">Username</div>
+                                    <div class="col-md-9">
+                                        <input type="text" class="form-control txtUsername" />
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-3">User Group</div>
+                                    <div class="col-md-9">
+                                        <select class="form-control ddlUserGroup">
+                                            <option value="1">Super Admin</option>
+                                            <option value="2">Admin</option>
+                                            <option value="3">Driver</option>
+                                            <option value="4">Receiption</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-3">Password</div>
+                                    <div class="col-md-9">
+                                        <input type="password" class="form-control txtPassword" />
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-3">Confirm Password</div>
+                                    <div class="col-md-9">
+                                        <input type="password" class="form-control txtConfirmPassword" />
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-3">Valid From</div>
+                                    <div class="col-md-9">
+                                        <input type="text" class="form-control txtValidFrom nepdate-picker" />
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-3">Valid To</div>
+                                    <div class="col-md-9">
+                                        <input type="text" class="form-control txtValidTo nepdate-picker" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-3">Fullname</div>
+                                    <div class="col-md-9">
+                                        <input type="text" class="form-control txtFullname" />
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-3">Email</div>
+                                    <div class="col-md-9">
+                                        <input type="text" class="form-control txtEmail" />
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-3">Contact No</div>
+                                    <div class="col-md-9">
+                                        <input type="text" class="form-control txtContactNo" />
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-3">Address</div>
+                                    <div class="col-md-9">
+                                        <input type="text" class="form-control txtAddress" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btnClose">Close</button>
+                <button type="button" class="btn btn-primary btnSave">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+@section LocalScripts {
+    <script>
+        $(document).on('click', '.btnNew', function () {
+            $('#mdlSetup').modal('show');
+        });
+
+        $(document).on('click', '.btnClose', function () {
+            var ok = confirm('Are you sure to clear form?')
+            if (ok) {
+                clearForm();
+            }
+        })
+
+        $(document).on('click', '.btnSave', function () {
+            var obj = {
+                username: $('.txtUsername').val() || '',
+                userGroupId: $('.ddlUserGroup').val() || '0',
+                password: $('.txtPassword').val() || '',
+                confirmPassword: $('.txtConfirmPassword').val() || '',
+                validFrom: $('.txtValidFrom').val() || '',
+                validTo: $('.txtValidTo').val() || '',
+                fullname: $('.txtFullname').val() || '',
+                email: $('.txtEmail').val() || '',
+                contactNo: $('.txtContactNo').val() || '',
+                address: $('.txtAddress').val() || '',
+            };
+
+            if (obj.username == '') {
+                alert('Enter Username')
+            } else if (obj.userGroupId == '') {
+                alert('Enter User Group Id')
+            }else {
+                $.ajax({
+                    method:'post',
+                    contentType: "application/json; charset=utf-8",
+                    url: '@Url.Action("Save", "Users")',
+                    data: JSON.stringify(obj),
+                    beforeSend: function () {
+                        $.blockUI();
+                    },
+                    complete:function(){
+                        $.unblockUI()
+                    },
+                    error: function (err) {
+                        console.log(err);
+                        alert('Error Occured!!')
+                    },
+                    success: function (rsp) {
+                        debugger;
+                    }
+                });
+            }
+        });
+
+
+        function clearForm() {
+            $('.txtUsername').val('');
+            $('.ddlUserGroup').val('');
+            $('.txtPassword').val('');
+            $('.txtConfirmPassword').val('');
+            $('.txtValidFrom').val('');
+            $('.txtValidTo').val('');
+            $('.txtFullname').val('');
+            $('.txtEmail').val('');
+            $('.txtContactNo').val('');
+            $('.txtAddress').val('');
+
+        }
+
+
+    </script>
+}

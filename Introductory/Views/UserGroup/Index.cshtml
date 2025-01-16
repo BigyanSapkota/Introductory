@@ -1,13 +1,5 @@
-﻿@model IEnumerable<Introductory.Models.UserGroup>
-
-
-@section Header {
-    <style>
-        .cust-bg {
-            background-color: silver;
-            color: green;
-        }
-    </style>
+﻿@section Header {
+    
 }
 
 <div class="row">
@@ -19,15 +11,17 @@
                         <div class="row">
                             <div class="col-md-3">
                                 <label>Group Name</label><br />
-                                <input type="text" class="form-control" />
+                                <input type="text" class="form-control txtFilterName" />
                             </div>
                             <div class="col-md-3">
                                 <label>Group Code</label><br />
-                                <input type="text" class="form-control" />
+                                <input type="text" class="form-control txtFilterCode" />
                             </div>
                             <div class="col-md-3">
                                 <br />
-                                <button type="button" class="btn btn-primary">SEARCH</button>
+                                <button type="button" class="btn btn-primary btnSearch">
+                                    <i class="fa fa-search"></i> SEARCH
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -45,19 +39,7 @@
                                     <th>Action</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                @foreach (var item in Model)
-                                {
-                                    <tr>
-                                        <td>@item.UserGroupID</td>
-                                        <td>@item.UserGroupName</td>
-                                        <td>@item.UserGroupCode</td>
-                                        <td>
-                                            <button type="button" class="btn btn-warning btn-sm">Edit</button>
-                                            <button type="button" class="btn btn-danger btn-sm">Delete</button>
-                                        </td>
-                                    </tr>
-                                }
+                            <tbody class="data-list">
                             </tbody>
                         </table>
                     </div>
@@ -86,8 +68,9 @@
                         <div class="row mt-2">
                             <div class="col-md-3"></div>
                             <div class="col-md-9 text-right">
-                                <button type="button" class="btn btn-success" id="btnSave">SAVE</button>
-                                <button type="button" class="btn btn-danger" id="btnCancel">Cancel</button>
+                                <input type="hidden" class="hdnId" value="0" />
+                                <button type="button" class="btn btn-success" id="btnSave"><i class="fa fa-save"></i> SAVE</button>
+                                <button type="button" class="btn btn-danger" id="btnCancel"><i class="fa fa-refresh"></i> Cancel</button>
                             </div>
                         </div>
                     </div>
@@ -100,25 +83,192 @@
 
 @section LocalScripts {
     <script>
-        $(document).ready(function () {})
+        $(document).ready(function () {
+            loadData();
+        })
 
-        $(document).on("click", "#btnSave", function () { 
+        $(document).on("click", "#btnSave", function () {
             var name = $('.txtName').val();
             var code = $('.txtCode').val();
+            var id = $('.hdnId').val();
 
             if (name == '') {
                 toastr["error"]("Enter User Group Name", "Error")
             } else if (code == '') {
                 toastr["error"]("Enter User Group Code", "Error")
             } else {
-                toastr["success"]("GOOD", "OK")
+
+                $.ajax({
+                    method: 'get',
+                    contentType: "application/json; charset=utf-8",
+                    url: '@Url.Action("SaveData", "UserGroup")?id=' + id + '&name=' + name + '&code=' + code,
+                    success: function (res) {
+                        if (res.success == true) {
+                            toastr["success"](res.message, "OK");
+                            clearForm();
+                            loadData();
+                        } else {
+                            toastr["error"](res.message, "ERROR")
+                        }
+                    },
+                    error: function (err) {
+                        debugger;
+                    },
+                    beforeSend: function () {
+                        $.blockUI();
+                    },
+                    complete: function () {
+                        $.unblockUI();
+                    }
+                });
+
             }
         })
 
         $(document).on('click', '#btnCancel', function () {
-            alert('CANCELLED')
+            var result = confirm("Are you sure to clear data?");
+            if (result == true) {
+                clearForm();
+            }
         })
 
+        function clearForm() {
+            $('.txtName').val("")
+            $('.txtCode').val("")
+            $('.hdnId').val(0)
+        }
+
+        $(document).on('click', '.btnDelete', function () {
+            var id = $(this).data('key');
+            var result = confirm('Are you sure to delete data?');
+            if (result == true) {
+                $.ajax({
+                    method: 'get',
+                    contentType: "application/json; charset=utf-8",
+                    url: '@Url.Action("DeleteData", "UserGroup")?key=' + id,
+                    success: function (res) {
+                        if (res.success == true) {
+                            toastr["success"](res.message, "OK");
+                            loadData();
+                        } else {
+                            toastr["error"](res.message, "ERROR")
+                        }
+                    },
+                    error: function (err) {
+                        debugger;
+                    },
+                    beforeSend: function () {
+                        $.blockUI();
+                    },
+                    complete: function () {
+                        $.unblockUI();
+                    }
+                })
+            }
+        })
+
+        $(document).on('click', '.btnEdit', function () {
+            var id = $(this).data('key');
+
+            $.ajax({
+                method: 'get',
+                contentType: "application/json; charset=utf-8",
+                url: '@Url.Action("GetUserGroupByID", "UserGroup")?key=' + id,
+                success: function (res) {
+                    if (res.success == true) {
+                        $('.txtName').val(res.data.userGroupName);
+                        $('.txtCode').val(res.data.userGroupCode);
+
+                        $('.hdnId').val(res.data.userGroupID);
+                    } else {
+                        toastr["error"](res.message, "ERROR")
+                    }
+                },
+                error: function (err) {
+                    debugger;
+                },
+                beforeSend: function () {
+                    $.blockUI();
+                },
+                complete: function () {
+                    $.unblockUI();
+                }
+            })
+
+        });
+
+
+        function loadData() {
+            var name = $('.txtFilterName').val();
+            var code = $('.txtFilterCode').val();
+
+            $.ajax({
+                method: 'get',
+                contentType: "application/json; charset=utf-8",
+                url: '@Url.Action("GetAllData", "UserGroup")?name=' + name + '&code=' + code,
+                success: function (res) {
+                    if (res.success == true) {
+                        var dbData = res.data;
+
+
+                        var xyz = '';
+                        $.each(dbData, function (i, x) {
+                            xyz += '<tr>';
+                            xyz += '<td>' + x.userGroupID + '</td>';
+                            xyz += '<td>' + x.userGroupName + '</td>';
+                            xyz += '<td>' + x.userGroupCode + '</td>';
+                            xyz += '<td><button type="button" class="btn btn-warning btn-sm mr-2 btnEdit" data-key="' + x.userGroupID + '"><i class="fa fa-edit"></i> Edit</buttion><button type="button" class="btn btn-danger btn-sm btnDelete" data-key="' + x.userGroupID + '"><i class="fa fa-trash"></i> Delete</buttion><button type="button" class="btn btn-secondary btn-sm btnView" data-key="' + x.userGroupID + '"><i class="fa fa-eye"></i> View</buttion></td>'
+                            xyz += '</tr>';
+                        });
+
+                        $('.data-list').html(xyz);
+
+                    } else {
+                        toastr["error"](res.message, "ERROR")
+                    }
+                },
+                error: function (err) {
+                    debugger;
+                },
+                beforeSend: function () {
+                    $.blockUI();
+                },
+                complete: function () {
+                    $.unblockUI();
+                }
+            })
+        }
+
+        $(document).on('click', '.btnSearch', function () {
+            loadData();
+        });
+
+        $(document).on("click", ".btnView", function () {
+            var id = $(this).data('key');
+            $.ajax({
+                method: 'get',
+                contentType: "application/json; charset=utf-8",
+                url: '@Url.Action("GetUserGroupByID", "UserGroup")?key=' + id,
+                success: function (res) {
+                    if (res.success == true) {
+                        alert(res.data.createdDate);
+                    } else {
+                        toastr["error"](res.message, "ERROR")
+                    }
+                },
+                error: function (err) {
+                    debugger;
+                },
+                beforeSend: function () {
+                    $.blockUI();
+                },
+                complete: function () {
+                    $.unblockUI();
+                }
+            })
+
+
+        });
 
     </script>
 }
