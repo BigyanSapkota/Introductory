@@ -136,6 +136,7 @@
                 </div>
             </div>
             <div class="modal-footer">
+                <input type="hidden" class="hdnId" value="0" />
                 <button type="button" class="btn btn-secondary btnClose">Close</button>
                 <button type="button" class="btn btn-primary btnSave">Save changes</button>
             </div>
@@ -169,7 +170,11 @@
         })
 
         $(document).on('click', '.btnSave', function () {
+
+            // var id = $('.hdnId').val();
+
             var obj = {
+                userID: $('.hdnId').val() || '0',
                 username: $('.txtUsername').val() || '',
                 userGroupId: $('.ddlUserGroup').val() || '0',
                 password: $('.txtPassword').val() || '',
@@ -206,6 +211,7 @@
                         if (rsp.success) {
                             toastr["success"](rsp.message, "OK");
                             clearForm();
+                            loadData()
                             $('#mdlSetup').modal('hide');
                         } else {
                             toastr["error"](rsp.message, "ERROR");
@@ -242,6 +248,51 @@
                 })
             }
         })
+
+
+        $(document).on('click', '.btnEdit', function () {
+            var id = $(this).data('key');
+
+            $.ajax({
+                method: 'get',
+                contentType: "application/json; charset=utf-8",
+                url: '@Url.Action("GetUserByID", "Users")?key=' + id,
+                success: function (res) {
+                    if (res.success == true) {
+
+                        
+                $('#mdlSetup').modal('show');
+
+                // <input type="hidden" class="hdnId" value="0" />
+                $('.hdnId').val(res.data.userID) ,
+                $('.txtUsername').val(res.data.username) ,
+                $('.ddlUserGroup').val(res.data.userGroupId),
+                $('.txtPassword').val(res.data.password) ,
+                $('.txtConfirmPassword').val(res.data.password) ,
+                $('.txtValidFrom').val(res.data.validFrom),
+                $('.txtValidTo').val(res.data.validTo),
+                $('.txtFullname').val(res.data.fullname) ,
+                $('.txtEmail').val(res.data.email) ,
+                $('.txtContactNo').val(res.data.contactNo) ,
+                $('.txtAddress').val(res.data.address)
+                // $('.txtAddress').val(Selected Value: ${this.value}, Text: ${this.options[this.selectedIndex].text});
+
+                    } else {
+                        toastr["error"](res.message, "ERROR")
+                    }
+                },
+                error: function (err) {
+                    debugger;
+                },
+                beforeSend: function () {
+                    $.blockUI();
+                },
+                complete: function () {
+                    $.unblockUI();
+                }
+            })
+
+        });
 
 
         function clearForm() {
@@ -302,7 +353,7 @@
                             xyz += '<td>' + x.fullname + '</td>';
                             xyz += '<td>' + x.email + '</td>';
                             xyz += '<td>' + x.contactNo + '</td>';
-                            xyz += '<td><button type="button" class="btn btn-sm btn-secondary btnEdit"><i class="fa fa-edit"></i></button><button type="button" class="btn btn-sm btn-danger btnDelete" data-key=' + x.userID + '><i class="fa fa-trash"></i></button></td>';
+                            xyz += '<td><button type="button" class="btn btn-sm btn-secondary btnEdit" data-key=' + x.userID + '><i class="fa fa-edit"></i> Edit</button><button type="button" class="btn btn-sm btn-danger btnDelete" data-key=' + x.userID + '><i class="fa fa-trash"></i> Delete</button></td>';
                             xyz += '</tr>';
                         });
                         $('.data-body').html(xyz);

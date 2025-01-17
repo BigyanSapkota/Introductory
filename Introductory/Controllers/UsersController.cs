@@ -1,10 +1,12 @@
-﻿using Introductory.DAO;
+﻿using System.Xml.Linq;
+using Introductory.DAO;
 using Introductory.Helper;
 using Introductory.Models;
 using Introductory.Models.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Identity.Client;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Introductory.Controllers
 {
@@ -26,72 +28,118 @@ namespace Introductory.Controllers
 
 
         [HttpPost]
-        public JsonResult Save([FromBody] UsersVM vm)
+        public JsonResult Save ([FromBody] UsersVM vm)
         {
-            if (string.IsNullOrEmpty(vm.Username))
+
+            if (vm.UserID == 0)
             {
-                return Json(new
-                {
-                    Success = false,
-                    Message = "Enter User Name"
-                });
-            }
-            else if (vm.UserGroupId == 0)
-            {
-                return Json(new
-                {
-                    Success = false,
-                    Message = "Select User Group Name"
-                });
-            }
-            else if (vm.Password != vm.ConfirmPassword)
-            {
-                return Json(new
-                {
-                    Success = false,
-                    Message = "Password Not Matched"
-                });
-            }
-            else
-            {
-                var oldUser = _context
-                                .Users
-                                .Where(x => x.Username == vm.Username)
-                                .FirstOrDefault();
-                if (oldUser != null)
+                if (string.IsNullOrEmpty(vm.Username))
                 {
                     return Json(new
                     {
                         Success = false,
-                        Message = "Username Already Exists in Database"
+                        Message = "Enter User Name"
+                    });
+                }
+                else if (vm.UserGroupId == 0)
+                {
+                    return Json(new
+                    {
+                        Success = false,
+                        Message = "Select User Group Name"
+                    });
+                }
+                else if (vm.Password != vm.ConfirmPassword)
+                {
+                    return Json(new
+                    {
+                        Success = false,
+                        Message = "Password Not Matched"
                     });
                 }
                 else
                 {
-                    Users dbMdl = new Users()
-                    {
-                        Username = vm.Username.ToText(),
-                        Password = vm.Password.ToText(),
-                        UserGroupId = vm.UserGroupId.ToInt32(),
-                        Fullname = vm.Fullname.ToText(),
-                        Address = vm.Address.ToText(),
-                        Email = vm.Email.ToText(),
-                        ContactNo = vm.ContactNo.ToText(),
-                        ValidFrom = vm.ValidFrom.ToEnglishDate(),
-                        ValidTo = vm.ValidTo.ToEnglishDate(),
-                        IsActive = true
-                    };
+                    var oldUser = _context
+                                    .Users
+                                    .Where(x => x.Username == vm.Username)
+                                    .FirstOrDefault();
 
-                    _context.Users.Add(dbMdl);
-
-                    _context.SaveChanges();
-                    return Json(new
+                 
+                    if (oldUser == _context
+                                    .Users
+                                    .Where(x => x.Username == vm.Username)
+                                    .FirstOrDefault()
+                                    )
                     {
-                        Success = true,
-                        Message = "Users Registered Successfully!!!"
-                    });
+                        return Json(new
+                        {
+                            Success = false,
+                            Message = "Email already Exist for other user"
+                        });
+                    }
+                    else
+                    {
+
+                        oldUser.Username = vm.Username;
+                        oldUser.Password = vm.Password;
+
+                        oldUser.Username = vm.Username.ToText();
+                        oldUser.Password = vm.Password.ToText();
+                        oldUser.UserGroupId = vm.UserGroupId.ToInt32();
+                        oldUser.Fullname = vm.Fullname.ToText();
+                        oldUser.Address = vm.Address.ToText();
+                        oldUser.Email = vm.Email.ToText();
+                        oldUser.ContactNo = vm.ContactNo.ToText();
+                        oldUser.ValidFrom = vm.ValidFrom.ToEnglishDate();
+                        oldUser.ValidTo = vm.ValidTo.ToEnglishDate();
+                        oldUser.IsActive = true;
+                       
+
+                        _context.Users.Add(oldUser);
+
+                        _context.SaveChanges();
+                        return Json(new
+                        {
+                            Success = true,
+                            Message = "Users Registered Successfully!!!"
+                        });
+
+
+
+                    }
                 }
             }
+            else {
+
+                var oldUser = _context
+                                        .Users
+                                        .Where(x => x.UserID == vm.UserID)
+                                        .FirstOrDefault();
+
+
+                Users dbMdl = new Users()
+                {
+                    UserID = vm.UserID.ToInt32(),
+                    Username = vm.Username.ToText(),
+                    Password = vm.Password.ToText(),
+                    UserGroupId = vm.UserGroupId.ToInt32(),
+                    Fullname = vm.Fullname.ToText(),
+                    Address = vm.Address.ToText(),
+                    Email = vm.Email.ToText(),
+                    ContactNo = vm.ContactNo.ToText(),
+                    ValidFrom = vm.ValidFrom.ToEnglishDate(),
+                    ValidTo = vm.ValidTo.ToEnglishDate(),
+                    IsActive = true
+                };
+                _context.Users.Add(dbMdl);
+                _context.SaveChanges();
+                return Json(new
+                {
+                    Success = true,
+                    Message = "Users Registered Successfully!!!"
+                });
+            }
+
         }
 
 
@@ -153,6 +201,47 @@ namespace Introductory.Controllers
                     Messaage = "User Deleted Successfully!"
                 });
             }
+        }
+        public JsonResult GetUserByID(int key)
+        {
+
+            var dbData = _context
+                                    .Users
+                                    .Where(x => x.IsActive == true && x.UserID==key)                                                                      
+                                    .Select(s => new UsersVM
+                                    {
+                                        
+                                        Username = s.Username.ToText(),
+                                        Address = s.Address.ToText(),
+                                        Password = s.Password,
+                                        ConfirmPassword = s.Password,
+                                        ContactNo = s.ContactNo.ToText(),
+                                        Email = s.Email.ToText(),
+                                        Fullname = s.Fullname.ToText(),
+                                        UserGroupId = s.UserGroupId.ToInt32(),
+                                        UserID = s.UserID.ToInt32(),
+                                        ValidFrom = s.ValidFrom.ToNepaliDate(),
+                                        ValidTo = s.ValidTo.ToNepaliDate(),
+                                    })
+                                    .FirstOrDefault();
+
+
+
+
+            if (key == 0)
+            {
+                return Json(new
+                {
+                    Success = false,
+                    Message = "Data not found or selected user is not active user."
+                });
+            }
+            
+            return Json(new
+            {
+                Success = true,
+                Data = dbData
+            });
         }
     }
 }
