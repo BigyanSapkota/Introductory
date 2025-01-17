@@ -40,7 +40,7 @@
                             <th>Action</th>
                         </tr>
                     </thead>
-                    <tbody></tbody>
+                    <tbody class="data-body"></tbody>
                 </table>
             </div>
         </div>
@@ -72,10 +72,7 @@
                                     <div class="col-md-3">User Group</div>
                                     <div class="col-md-9">
                                         <select class="form-control ddlUserGroup">
-                                            <option value="1">Super Admin</option>
-                                            <option value="2">Admin</option>
-                                            <option value="3">Driver</option>
-                                            <option value="4">Receiption</option>
+                                           
                                         </select>
                                     </div>
                                 </div>
@@ -151,6 +148,12 @@
 
 @section LocalScripts {
     <script>
+        $(document).ready(function () {
+            loadData();
+            loadUserGroups();
+        });
+
+
         $(document).on('click', '.btnNew', function () {
             $('#mdlSetup').modal('show');
         });
@@ -178,18 +181,18 @@
 
             if (obj.username == '') {
                 alert('Enter Username')
-            } else if (obj.userGroupId == '') {
+            } else if (obj.userGroupId == '' || obj.userGroupId == '0') {
                 alert('Enter User Group Id')
-            }else {
+            } else {
                 $.ajax({
-                    method:'post',
+                    method: 'post',
                     contentType: "application/json; charset=utf-8",
                     url: '@Url.Action("Save", "Users")',
                     data: JSON.stringify(obj),
                     beforeSend: function () {
                         $.blockUI();
                     },
-                    complete:function(){
+                    complete: function () {
                         $.unblockUI()
                     },
                     error: function (err) {
@@ -197,7 +200,13 @@
                         alert('Error Occured!!')
                     },
                     success: function (rsp) {
-                        debugger;
+                        if (rsp.success) {
+                            toastr["success"](rsp.message, "OK");
+                            clearForm();
+                            $('#mdlSetup').modal('hide');
+                        } else {
+                            toastr["error"](rsp.message, "ERROR");
+                        }
                     }
                 });
             }
@@ -218,6 +227,56 @@
 
         }
 
+
+
+        function loadUserGroups() {
+            $.ajax({
+                methodType: 'get',
+                contentType: "application/json; charset=utf-8",
+                url: '@Url.Action("GetAllData", "UserGroup")',
+                success: function (res) {
+                    if (res.success) {
+                        var data = res.data;
+
+                        var xyz = '<option value=0>--select--</option>';
+                        $.each(data, function (i, x) {
+                            xyz += '<option value=' + x.userGroupID+ '>' + x.userGroupName + '</option>';
+                        });
+                        $('.ddlUserGroup').html(xyz);
+
+                    }
+                }
+            })
+        }
+
+        function loadData() {
+            debugger;
+            $.ajax({
+                method: 'post',
+                contentType: "application/json; charset=utf-8",
+                url: '@Url.Action("GetAllData", "Users")',
+                data: JSON.stringify({userID:1}),
+                success: function (res) {
+                    if (res.success) {
+                        var data = res.data;
+
+                        var xyz = '';
+                        $.each(data, function (i, x) {
+                            xyz += '<tr>';
+                            xyz += '<td>' + x.userID + '</td>';
+                            xyz += '<td>' + x.username + '</td>';
+                            xyz += '<td>' + x.fullname + '</td>';
+                            xyz += '<td>' + x.email + '</td>';
+                            xyz += '<td>' + x.contactNo + '</td>';
+                            xyz += '<td></td>';
+                            xyz += '</tr>';
+                        });
+                        $('.data-body').html(xyz);
+
+                    }
+                }
+            })
+        }
 
     </script>
 }

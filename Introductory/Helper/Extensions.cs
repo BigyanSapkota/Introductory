@@ -1,4 +1,5 @@
-﻿using static Introductory.Helper.Calendar;
+﻿using Microsoft.Identity.Client;
+using static Introductory.Helper.Calendar;
 
 namespace Introductory.Helper
 {
@@ -10,9 +11,21 @@ namespace Introductory.Helper
             {
                 return Convert.ToInt32(o);
             }
-            catch 
-            { 
+            catch
+            {
                 return 0;
+            }
+        }
+
+        public static Boolean ToBool(this object o)
+        {
+            try
+            {
+                return Convert.ToBoolean(o);
+            }
+            catch
+            {
+                return false;
             }
         }
 
@@ -69,4 +82,7 @@ namespace Introductory.Helper
             }
         }
     }
+
+
+   
 }
