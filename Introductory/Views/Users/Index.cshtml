@@ -7,15 +7,15 @@
                 <div class="row">
                     <div class="col-md-3">
                         <label>Username</label><br />
-                        <input type="text" class="form-control" />
+                        <input type="text" class="form-control txtFilterUsername" />
                     </div>
                     <div class="col-md-3">
                         <label>Contact No</label><br />
-                        <input type="text" class="form-control" />
+                        <input type="text" class="form-control txtFilterContactNo" />
                     </div>
                     <div class="col-md-3">
                         <br />
-                        <button type="button" class="btn btn-primary">
+                        <button type="button" class="btn btn-primary btnSearch">
                             <i class="fa fa-search"></i> Search
                         </button>
                         <button type="button" class="btn btn-success btnNew">
@@ -153,6 +153,9 @@
             loadUserGroups();
         });
 
+        $(document).on('click', '.btnSearch', function () {
+            loadData();
+        })
 
         $(document).on('click', '.btnNew', function () {
             $('#mdlSetup').modal('show');
@@ -212,6 +215,34 @@
             }
         });
 
+        $(document).on('change', '.txtFilterUsername', function () {
+            loadData();        
+        })
+
+
+        $(document).on('click', '.btnDelete', function () {
+            var id = $(this).data('key');
+            var result= confirm('Are you sure to delete data?');
+            if(result == true){
+                $.ajax({
+                    method:'get',
+                    contentType:'',
+                    url:'@Url.Action("Delete","Users")?id=' + id,
+                    beforeSend: function () { $.blockUI(); },
+                    complete: function () { $.unblockUI(); },
+                    error: function (err) { console.log(err); alert('Error Occured') },
+                    success: function (rsp) {
+                        if (rsp.success) {
+                            toastr["success"](rsp.message, "OK");
+                            loadData();
+                        } else {
+                            toastr["error"](rsp.message, "ERROR");
+                        }
+                    }
+                })
+            }
+        })
+
 
         function clearForm() {
             $('.txtUsername').val('');
@@ -250,12 +281,15 @@
         }
 
         function loadData() {
-            debugger;
+            var obj = {
+                username: $('.txtFilterUsername').val() || '',
+                contactNo: $('.txtFilterContactNo').val() || ''
+            };
             $.ajax({
                 method: 'post',
                 contentType: "application/json; charset=utf-8",
                 url: '@Url.Action("GetAllData", "Users")',
-                data: JSON.stringify({userID:1}),
+                data: JSON.stringify(obj),
                 success: function (res) {
                     if (res.success) {
                         var data = res.data;
@@ -268,7 +302,7 @@
                             xyz += '<td>' + x.fullname + '</td>';
                             xyz += '<td>' + x.email + '</td>';
                             xyz += '<td>' + x.contactNo + '</td>';
-                            xyz += '<td></td>';
+                            xyz += '<td><button type="button" class="btn btn-sm btn-secondary btnEdit"><i class="fa fa-edit"></i></button><button type="button" class="btn btn-sm btn-danger btnDelete" data-key=' + x.userID + '><i class="fa fa-trash"></i></button></td>';
                             xyz += '</tr>';
                         });
                         $('.data-body').html(xyz);

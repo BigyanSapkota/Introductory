@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.Identity.Client;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Introductory.Models
@@ -16,6 +17,7 @@ namespace Introductory.Models
         public string Email { get; set; }
         public string ContactNo { get; set; }
         public string Address { get; set; }
+        public bool IsActive { get; set; }
         //public DateTime? DOB { get; set; }
 
 
