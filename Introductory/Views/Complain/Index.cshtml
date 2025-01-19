@@ -1,0 +1,376 @@
+﻿
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label>Full Name</label><br />
+                        <input type="text" class="form-control txtFilterUsername" />
+                    </div>
+                    <div class="col-md-3">
+                        <label>Contact No</label><br />
+                        <input type="text" class="form-control txtFilterContactNo" />
+                    </div>
+                    <div class="col-md-3">
+                        <br />
+                        <button type="button" class="btn btn-primary btnSearch">
+                            <i class="fa fa-search"></i> Search
+                        </button>
+                        <button type="button" class="btn btn-success btnNew">
+                            <i class="fa fa-plus"></i> NEW
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <table class="table table-striped table-hover dtTable">
+                    <thead>
+                        <tr>
+                            <th>SN</th>
+                            <th>Fullname</th>
+                            <th>Email</th>
+                            <th>Contact No</th>
+                            <th>Statement</th>
+                            <th>Address</th>
+                            <th>CustomerNo</th>
+                            <th>CreatedDate</th>
+                            <th>ComplainType</th>
+                           
+                        </tr>
+                    </thead>
+                    <tbody class="data-body"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="mdlSetup" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Users Setup</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-3">Username</div>
+                                    <div class="col-md-9">
+                                        <input type="text" class="form-control txtUsername" />
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-3">User Group</div>
+                                    <div class="col-md-9">
+                                        <select class="form-control ddlUserGroup">
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-3">Password</div>
+                                    <div class="col-md-9">
+                                        <input type="password" class="form-control txtPassword" />
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-3">Confirm Password</div>
+                                    <div class="col-md-9">
+                                        <input type="password" class="form-control txtConfirmPassword" />
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-3">Valid From</div>
+                                    <div class="col-md-9">
+                                        <input type="text" class="form-control txtValidFrom nepdate-picker" />
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-3">Valid To</div>
+                                    <div class="col-md-9">
+                                        <input type="text" class="form-control txtValidTo nepdate-picker" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-3">Fullname</div>
+                                    <div class="col-md-9">
+                                        <input type="text" class="form-control txtFullname" />
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-3">Email</div>
+                                    <div class="col-md-9">
+                                        <input type="text" class="form-control txtEmail" />
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-3">Contact No</div>
+                                    <div class="col-md-9">
+                                        <input type="text" class="form-control txtContactNo" />
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-3">Address</div>
+                                    <div class="col-md-9">
+                                        <input type="text" class="form-control txtAddress" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input type="hidden" class="hdnId" value="0" />
+                <button type="button" class="btn btn-secondary btnClose">Close</button>
+                <button type="button" class="btn btn-primary btnSave">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+@section LocalScripts {
+    <script>
+        $(document).ready(function () {
+            loadData();
+            loadUserGroups();
+        });
+
+        $(document).on('click', '.btnSearch', function () {
+            loadData();
+        })
+
+        $(document).on('click', '.btnNew', function () {
+            $('#mdlSetup').modal('show');
+        });
+
+        $(document).on('click', '.btnClose', function () {
+            var ok = confirm('Are you sure to clear form?')
+            if (ok) {
+                clearForm();
+            }
+        })
+
+        $(document).on('click', '.btnSave', function () {
+
+            // var id = $('.hdnId').val();
+
+            var obj = {
+                userID: $('.hdnId').val() || '0',
+                username: $('.txtUsername').val() || '',
+                userGroupId: $('.ddlUserGroup').val() || '0',
+                password: $('.txtPassword').val() || '',
+                confirmPassword: $('.txtConfirmPassword').val() || '',
+                validFrom: $('.txtValidFrom').val() || '',
+                validTo: $('.txtValidTo').val() || '',
+                fullname: $('.txtFullname').val() || '',
+                email: $('.txtEmail').val() || '',
+                contactNo: $('.txtContactNo').val() || '',
+                address: $('.txtAddress').val() || '',
+            };
+
+            if (obj.username == '') {
+                alert('Enter Username')
+            } else if (obj.userGroupId == '' || obj.userGroupId == '0') {
+                alert('Enter User Group Id')
+            } else {
+                $.ajax({
+                    method: 'post',
+                    contentType: "application/json; charset=utf-8",
+                    url: '@Url.Action("Save", "Users")',
+                    data: JSON.stringify(obj),
+                    beforeSend: function () {
+                        $.blockUI();
+                    },
+                    complete: function () {
+                        $.unblockUI()
+                    },
+                    error: function (err) {
+                        console.log(err);
+                        alert('Error Occured!!')
+                    },
+                    success: function (rsp) {
+                        if (rsp.success) {
+                            toastr["success"](rsp.message, "OK");
+                            clearForm();
+                            loadData()
+                            $('#mdlSetup').modal('hide');
+                        } else {
+                            toastr["error"](rsp.message, "ERROR");
+                        }
+                    }
+                });
+            }
+        });
+
+        $(document).on('change', '.txtFilterUsername', function () {
+            loadData();
+        })
+
+
+        $(document).on('click', '.btnDelete', function () {
+            var id = $(this).data('key');
+            var result= confirm('Are you sure to delete data?');
+            if(result == true){
+                $.ajax({
+                    method:'get',
+                    contentType:'',
+                    url:'@Url.Action("Delete", "Users")?id=' + id,
+                    beforeSend: function () { $.blockUI(); },
+                    complete: function () { $.unblockUI(); },
+                    error: function (err) { console.log(err); alert('Error Occured') },
+                    success: function (rsp) {
+                        if (rsp.success) {
+                            toastr["success"](rsp.message, "OK");
+                            loadData();
+                        } else {
+                            toastr["error"](rsp.message, "ERROR");
+                        }
+                    }
+                })
+            }
+        })
+
+
+        $(document).on('click', '.btnEdit', function () {
+            var id = $(this).data('key');
+
+            $.ajax({
+                method: 'get',
+                contentType: "application/json; charset=utf-8",
+                url: '@Url.Action("GetUserByID", "Users")?key=' + id,
+                success: function (res) {
+                    if (res.success == true) {
+
+
+                $('#mdlSetup').modal('show');
+
+                // <input type="hidden" class="hdnId" value="0" />
+                $('.hdnId').val(res.data.userID) ,
+                $('.txtUsername').val(res.data.username) ,
+                $('.ddlUserGroup').val(res.data.userGroupId),
+                $('.txtPassword').val(res.data.password) ,
+                $('.txtConfirmPassword').val(res.data.password) ,
+                $('.txtValidFrom').val(res.data.validFrom),
+                $('.txtValidTo').val(res.data.validTo),
+                $('.txtFullname').val(res.data.fullname) ,
+                $('.txtEmail').val(res.data.email) ,
+                $('.txtContactNo').val(res.data.contactNo) ,
+                $('.txtAddress').val(res.data.address)
+                // $('.txtAddress').val(Selected Value: ${this.value}, Text: ${this.options[this.selectedIndex].text});
+
+                    } else {
+                        toastr["error"](res.message, "ERROR")
+                    }
+                },
+                error: function (err) {
+                    debugger;
+                },
+                beforeSend: function () {
+                    $.blockUI();
+                },
+                complete: function () {
+                    $.unblockUI();
+                }
+            })
+
+        });
+
+
+        function clearForm() {
+            $('.txtUsername').val('');
+            $('.ddlUserGroup').val('');
+            $('.txtPassword').val('');
+            $('.txtConfirmPassword').val('');
+            $('.txtValidFrom').val('');
+            $('.txtValidTo').val('');
+            $('.txtFullname').val('');
+            $('.txtEmail').val('');
+            $('.txtContactNo').val('');
+            $('.txtAddress').val('');
+
+        }
+
+
+
+        function loadUserGroups() {
+            $.ajax({
+                methodType: 'get',
+                contentType: "application/json; charset=utf-8",
+                url: '@Url.Action("GetAllData", "UserGroup")',
+                success: function (res) {
+                    if (res.success) {
+                        var data = res.data;
+
+                        var xyz = '<option value=0>--select--</option>';
+                        $.each(data, function (i, x) {
+                            xyz += '<option value=' + x.userGroupID+ '>' + x.userGroupName + '</option>';
+                        });
+                        $('.ddlUserGroup').html(xyz);
+
+                    }
+                }
+            })
+        }
+
+        function loadData() {
+            var obj = {
+                username: $('.txtFilterUsername').val() || '',
+                contactNo: $('.txtFilterContactNo').val() || ''
+            };
+            $.ajax({
+                method: 'post',
+                contentType: "application/json; charset=utf-8",
+                url: '@Url.Action("GetAllData", "Complain")',
+                data: JSON.stringify(obj),
+                success: function (res) {
+                    if (res.success) {
+                        var data = res.data;
+
+                        var xyz = '';
+                        $.each(data, function (i, x) {
+                            xyz += '<tr>';
+                            xyz += '<td>' + x.fullname + '</td>';
+                            xyz += '<td>' + x.email + '</td>';
+                            xyz += '<td>' + x.contactNo + '</td>';
+                            xyz += '<td>' + x.statement + '</td>';
+                            xyz += '<td>' + x.address + '</td>';
+                            xyz += '<td>' + x.customerNo + '</td>';
+                            xyz += '<td>' + x.issueDate + '</td>';
+                            xyz += '<td>' + x.createdDate + '</td>';
+                            xyz += '<td>' + x.complainTypeID + '</td>';
+                            xyz += '<td><button type="button" class="btn btn-sm btn-secondary btnEdit" data-key=' + x.userID + '><i class="fa fa-edit"></i> Edit</button><button type="button" class="btn btn-sm btn-danger btnDelete" data-key=' + x.userID + '><i class="fa fa-trash"></i> Delete</button></td>';
+                            xyz += '</tr>';
+                        });
+                        $('.data-body').html(xyz);
+
+
+                        $('.dtTable').DataTable();
+                    }
+                }
+            })
+        }
+
+    </script>
+}
