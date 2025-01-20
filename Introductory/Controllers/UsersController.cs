@@ -3,6 +3,7 @@ using Introductory.Helper;
 using Introductory.Models;
 using Introductory.Models.ViewModel;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Identity.Client;
 
@@ -16,8 +17,28 @@ namespace Introductory.Controllers
             _context = context;
         }
 
+        public override void OnActionExecuting(ActionExecutingContext context)
+        {
+            // check if values exists in session
+            // if values exists then open the page
+            // else redirect to login page
 
+            String sessionValue = HttpContext.Session.GetString("USER_ID");
+            if (string.IsNullOrEmpty(sessionValue))
+            {
+                context.Result = new RedirectResult("/Auth/Login");
+            }
+
+            base.OnActionExecuting(context);
+        }
+
+       
         public IActionResult Index()
+        {
+            return View();
+        }
+
+        public IActionResult Test()
         {
             return View();
         }
