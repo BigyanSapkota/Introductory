@@ -5,7 +5,7 @@ using System.Diagnostics;
 
 namespace Introductory.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         ApplicationDbContext _context;   //global object
         public HomeController(ApplicationDbContext context)
