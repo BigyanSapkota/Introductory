@@ -1,0 +1,290 @@
+﻿
+<div class="row">
+	<div class="col-md-12">
+		<div class="card">
+			<div class="card-body">
+				<div class="row">
+					<div class="col-md-6">
+						<div class="row">
+							<div class="col-md-6">
+								<label>Target Status ID</label>
+								<select class="form-control ddlFilterTargetID">
+								<option value="value">Target ID</option>
+								<option value="1">Status1</option>
+								<option value="2">Status2</option>
+								<option value="3">Status3</option>
+								<option value="4">Status4</option>
+								</select>
+							</div>
+							<div class="col-md-6">
+								<div class="row">
+									<label>CreatedDate Range</label>
+									<div class="col-md-6">
+                                        <input type="text" class="form-control nepdate-picker txtFilterDate" placeholder="Date" />
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="row">
+							<div class="col-md-3">
+								<br/>
+								<button class="btn btn-secondary btnSearch"><i class="fa fa-search "></i> Search</button>
+							</div>
+							<div class="col-md-3">
+								<br/>
+								<button class="btn btn-success btnNew"><i class="fa fa-plus "></i> New</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+    </div>   
+	<div class="col-md-12">
+		<div class="row">
+			<div class="card">
+				<div class="card-body">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>ComplainStatusTrackInfoID</th>
+                                <th>ComplainInfoID</th>
+                                <th>TargetStatusID</th>
+                                <th>Remarks</th>
+                                <th>CreatedBy</th>
+                                <th>CreatedDate</th>
+                            </tr>
+                        </thead>
+                        <tbody class="data-body  dtTable"></tbody>
+                    </table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="mdlSetup" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Complain Status Track Info</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row mt-2">
+                                    <div class="col-md-4">Complain Info ID</div>
+                                    <div class="col-md-8">
+                                        <select class="form-control ddlComplainInfoID">
+                                            <option value="0">---select---</option>
+                                            <option value="1">Complain Info 1</option>
+                                            <option value="2">Complain Info 2</option>
+                                            <option value="3">Complain Info 3</option>
+                                            <option value="4">Complain Info 4</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-4">Target Status ID</div>
+                                    <div class="col-md-8">
+                                        <select class="form-control ddlComplainStatusID">
+                                            <option value="0">---select---</option>
+                                            <option value="1">Target status 1</option>
+                                            <option value="2">Target status 2</option>
+                                            <option value="3">Target status 3</option>
+                                            <option value="4">Target status 4</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-4">Remarks</div>
+                                    <div class="col-md-8">
+                                        <input type="text" class="form-control txtRemarks" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-4">Created By</div>
+                                    <div class="col-md-8">
+                                        <select class="form-control ddlCreatedBy">
+                                            
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-4">Created Date</div>
+                                    <div class="col-md-8">
+                                        <input type="text" class="form-control txtCreatedDate nepdate-picker" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btnCancel">Cancel</button>
+                <button type="button" class="btn btn-primary btnSave">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section LocalScripts {
+    <script>
+        $(document).ready(function(){
+            loadUsers();
+            loadComplainStatusInfo();
+        })
+
+
+        $(document).on("click", ".btnNew", function(){
+             $('#mdlSetup').modal('show');  
+        })
+
+        $(document).on('click','.btnCancel', function(){
+            var userResponse = confirm("Are you sure you want to cancel?");
+            if(userResponse == true){
+                clearForm();
+            }
+        })
+
+        $(document).on('click', '.btnSave', function(){
+              var obj = {
+                  complainID : $('.ddlComplainInfoID').val() || '0',
+                  complainStatusID : $('.ddlComplainStatusID').val() || '0',
+                  remarks : $('.txtRemarks').val() || '',
+                  createdBy : $('.ddlCreatedBy').val() || '0',
+                  createdDate : $('.txtCreatedDate').val() || '',
+              }
+              debugger;
+
+              if(obj.complainID == 0 || ''){
+                  toastr["error"]("Please select a valid complain info id", "ERROR")
+              }
+              else if(obj.complainStatusID == 0 || ''){
+                  toastr["error"]("Please select a valid target status id", "ERROR")
+              }
+              else if(obj.createdBy == 0 || ''){
+                  toastr["error"]("Please select a valid user", "ERROR")
+              }else if(obj.createdDate == null){
+                  toastr["error"]("Please select a valid creation date", "ERROR")
+              }else{
+                  $.ajax({
+                        method: "post",
+                        contentType: "application/json; charset=utf-8",
+                        url: "@Url.Action("Save", "ComplainStatusTrackInfo")",
+                        data: JSON.stringify(obj),
+                        beforeSend: function (){
+                            $.blockUI();
+                        },
+                        success: function(res){
+                            if(res.success){
+                                 toastr["success"](res.message, "OK");
+                                 clearForm();
+                                 $('#mdlSetup').modal('hide');
+                                 loadComplainStatusInfo();
+                            }
+                            else{
+                                toastr["error"](res.message, "ERROR");
+                            }
+                        },
+                        complete: function (){
+                            $.unblockUI();
+                        }
+                  })
+              }
+        })
+
+        $(document).on('click', '.btnSearch', function() {
+            loadComplainStatusInfo();
+        })
+
+        function clearForm(){
+            $(".ddlComplainInfoID").val('0');
+            $(".ddlComplainStatusID").val('0');
+            $(".txtRemarks").val('');
+            $(".ddlCreatedBy").val('0');
+            $(".txtCreatedDate").val('');
+        }
+
+        function loadUsers(){
+            $.ajax({
+                method: 'post',
+                contentType: "application/json; charset=utf-8",
+                url: '@Url.Action("GetAllData","Users")',
+                data: JSON.stringify({
+                    username: "",
+                    contactNo: ""
+                }),
+                success: function(res){
+                    if(res.success){
+                        var data = res.data
+
+                        var xyz = '<option value="0">---select---</option>'
+                        $.each(data, function(i, x){
+                            xyz += '<option value=' + x.userID + '>' + x.username + '<option/>'
+                        })
+
+                        $('.ddlCreatedBy').html(xyz);
+                    }
+                }
+            })
+        }
+
+        function loadComplainStatusInfo(){
+
+            var filterObj = {
+                targetStatusID : $('.ddlFilterTargetID').val() || '0',
+                createdDate : $('.txtFilterDate').val() || ''
+            };
+
+            $.ajax({
+                method: 'post',
+                contentType: "application/json; charset=utf-8",
+                url: "@Url.Action("GetAllComplain","ComplainStatusTrackInfo")",
+                data: JSON.stringify(filterObj),
+                beforeSend: function(){
+                    $.blockUI()
+                },
+                success: function(res){
+                    if(res.success){
+                        var data = res.data
+
+                        var xyz = '';
+
+                        $.each(data, function(i, x){
+                            xyz += '<tr>';
+                            xyz += '<td>' + x.complainStatusTrackInfoID + '</td>';
+                            xyz += '<td>' + x.complainInfoID + '</td>';
+                            xyz += '<td>' + x.complainStatusID + '</td>';
+                            xyz += '<td>' + x.remarks + '</td>';
+                            xyz += '<td>' + x.createdBy + '</td>';
+                            xyz += '<td>' + x.createdDate + '</td>';
+                            xyz += '</tr>';
+                        })
+
+                        $('.dtTable').html(xyz);
+                    }
+                },
+                complete: function() {
+                    $.unblockUI();
+                }
+            })
+        }
+
+    </script>
+}
+

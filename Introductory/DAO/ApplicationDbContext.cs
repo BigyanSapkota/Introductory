@@ -13,6 +13,10 @@ namespace Introductory.DAO
         public DbSet<Student> Student { get; set; }
         public DbSet<UserGroup> UserGroup { get; set; }
         public DbSet<Users> Users { get; set; }
+        public DbSet<ComplainStatusTrackInfo> ComplainStatusTrackInfo { get; set; }
+        public DbSet<Complain> Complain { get; set; }
+        public DbSet<ComplainStatus> ComplainStatus { get; set; }
+        public DbSet<ComplainType> ComplainType { get; set; }
 
     }
 }
