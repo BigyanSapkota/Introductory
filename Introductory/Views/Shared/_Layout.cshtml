@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/2.2.1/css/dataTables.dataTables.min.css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.2.0/css/buttons.bootstrap.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" integrity="sha512-5A8nwdMOWrSz20fDsjczgUidUBR8liPYU+WymTZP1lmY9G6Oc7HlZv156XqnsgNUzTyMefFTcsFH/tnJE/+xBg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/44.1.0/ckeditor5.css">
     <link href="~/assets/plugins/keithwood_calendarpick/jquery.calendars.picker.css" rel="stylesheet" />
 
 
@@ -62,10 +63,13 @@
     <script src="~/assets/js/sidebarmenu.js"></script>
     <script src="~/assets/js/app.min.js"></script>
     <script src="~/assets/libs/apexcharts/dist/apexcharts.min.js"></script>
-    <script src="~/assets/libs/simplebar/dist/simplebar.js"></script>
+    <script src="~/assets/libs/simplebar/dist/simplebar.js"></script>3
+    <script src="https://cdn.ckeditor.com/ckeditor5/44.1.0/ckeditor5.umd.js"></script>
     <script src="~/assets/js/dashboard.js"></script>
     <!-- solar icons -->
-    <script src="https://cdn.jsdelivr.net/npm/iconify-icon@1.0.8/dist/iconify-icon.min.js"></script>
+    @* <script src="https://cdn.jsdelivr.net/npm/iconify-icon@1.0.8/dist/iconify-icon.min.js"></script> *@
+    <script src="https://cdn.ckeditor.com/ckeditor5/36.0.0/classic/ckeditor.js"></script>
+    
     <script>
         toastr.options = {
             "closeButton": false,
@@ -93,6 +97,40 @@
                 $(this).trigger('change');
             }
         });
+
+
+        const {
+            ClassicEditor,
+            Essentials,
+            Bold,
+            Italic,
+            Font,
+            Paragraph
+        } = CKEDITOR;
+
+        ClassicEditor
+            .create(document.querySelector('#editor'), {
+                licenseKey: '<YOUR_LICENSE_KEY>', // Create a free account on 
+                plugins: [Essentials, Bold, Italic, Font, Paragraph],
+                toolbar: [
+                    'undo', 'redo', '|', 'bold', 'italic', '|',
+                    'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor'
+                ]
+            })
+            .then(editor => {
+                window.editor = editor;
+            })
+            .catch(error => {
+                console.error(error);
+            });
+        // ClassicEditor
+        //     .create(document.querySelector('#ckeditor-textarea'))
+        //     .then(editor => {
+        //         console.log('Editor is ready', editor);
+        //     })
+        //     .catch(error => {
+        //         console.error('Error initializing editor:', error);
+        //     });
 
         // $('.search-ddl').select2();
     </script>

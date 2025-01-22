@@ -1,5 +1,6 @@
 ﻿using Introductory.DAO;
 using Introductory.Helper;
+using Introductory.Models;
 using Introductory.Models.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 
@@ -52,6 +53,110 @@ namespace Introductory.Controllers
                 Data = dbData
             });
         }
+
+
+
+
+        [HttpPost]
+        public JsonResult Save([FromBody] ComplainVM vm)
+        {
+            if (vm.ComplainId == 0)
+            {
+                if (string.IsNullOrEmpty(vm.Fullname))
+                {
+                    return Json(new
+                    {
+                        Success = false,
+                        Message = "Enter Full Name"
+                    });
+                }
+                else if (vm.ComplainTypeID== 0)
+                {
+                    return Json(new
+                    {
+                        Success = false,
+                        Message = "Select Complain Type"
+                    });
+                }
+                else
+                {
+                    var oldComplain = _context
+                                    .Complain
+                                    .Where(x => x.Fullname == vm.Fullname)
+                                    .FirstOrDefault();
+
+
+                    if (oldComplain == _context
+                                    .Complain
+                                    .Where(x => x.Fullname == vm.Fullname)
+                                    .FirstOrDefault()
+                                    )
+                    {
+                        return Json(new
+                        {
+                            Success = false,
+                            Message = "Email already Exist for other user"
+                        });
+                    }
+                    else
+                    {
+
+                        oldComplain.CustomerNo = vm.CustomerNo.ToInt32();
+                        oldComplain.IssueDate= vm.IssueDate.ToEnglishDate();
+                        oldComplain.CreatedDate = vm.CreatedDate.ToEnglishDate();
+                        oldComplain.Fullname = vm.Fullname.ToText();
+                        oldComplain.Email = vm.Email.ToText();
+                        oldComplain.ContactNo = vm.ContactNo.ToText();
+                        oldComplain.Statement = vm.Statement.ToText();
+                        oldComplain.Address = vm.Address.ToText();
+                        oldComplain.ComplainTypeID = vm.ComplainTypeID.ToInt32();
+                        _context.Complain.Add(oldComplain);
+
+                        _context.SaveChanges();
+                        return Json(new
+                        {
+                            Success = true,
+                            Message = "Complain Registered Successfully!!!"
+                        });
+
+
+
+                    }
+                }
+            }
+            else
+            {
+
+                var oldUser = _context
+                                        .Complain
+                                        .Where(x => x.ComplainId== vm.ComplainId)
+                                        .FirstOrDefault();
+
+
+                Complain dbMdl = new Complain()
+                {
+                CustomerNo = vm.CustomerNo.ToInt32(),
+                IssueDate = vm.IssueDate.ToEnglishDate(),
+                CreatedDate = vm.CreatedDate.ToEnglishDate(),
+                Fullname = vm.Fullname.ToText(),
+                Email = vm.Email.ToText(),
+                ContactNo = vm.ContactNo.ToText(),
+                Statement = vm.Statement.ToText(),
+                Address = vm.Address.ToText(),
+                ComplainTypeID = vm.ComplainTypeID.ToInt32()
+
+                  };
+                _context.Complain.Add(dbMdl);
+                _context.SaveChanges();
+                return Json(new
+                {
+                    Success = true,
+                    Message = "Complain edited Successfully!!!"
+                });
+            }
+
+        }
+
 
 
     }

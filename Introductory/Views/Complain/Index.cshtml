@@ -18,9 +18,9 @@
                         <button type="button" class="btn btn-primary btnSearch">
                             <i class="fa fa-search"></i> Search
                         </button>
-                        <button type="button" class="btn btn-success btnNew">
+                         <button type="button" class="btn btn-success btnNew">
                             <i class="fa fa-plus"></i> NEW
-                        </button>
+                        </button> 
                     </div>
                 </div>
             </div>
@@ -39,9 +39,9 @@
                             <th>Statement</th>
                             <th>Address</th>
                             <th>CustomerNo</th>
+                            <th>IssueDate</th>
                             <th>CreatedDate</th>
-                            <th>ComplainType</th>
-                           
+                            <th>ComplainType</th>                           
                         </tr>
                     </thead>
                     <tbody class="data-body"></tbody>
@@ -58,7 +58,7 @@
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Users Setup</h1>
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Complain </h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -67,40 +67,29 @@
                         <div class="card">
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-md-3">Username</div>
+                                    <div class="col-md-3">Customer No</div>
                                     <div class="col-md-9">
-                                        <input type="text" class="form-control txtUsername" />
+                                        <input type="text" class="form-control txtCustomerNo" />
                                     </div>
                                 </div>
                                 <div class="row mt-2">
-                                    <div class="col-md-3">User Group</div>
+                                    <div class="col-md-3">Complain Type</div>
                                     <div class="col-md-9">
-                                        <select class="form-control ddlUserGroup">
-                                        </select>
+                                        <select class="form-control ddlComplainType">
+                                        </select>                              
+                                    </div>
+                                </div>
+                         
+                                <div class="row mt-2">
+                                    <div class="col-md-3">Issue Date</div>
+                                    <div class="col-md-9">
+                                        <input type="text" class="form-control txtIssueDate nepdate-picker" />
                                     </div>
                                 </div>
                                 <div class="row mt-2">
-                                    <div class="col-md-3">Password</div>
+                                    <div class="col-md-3">Created Date</div>
                                     <div class="col-md-9">
-                                        <input type="password" class="form-control txtPassword" />
-                                    </div>
-                                </div>
-                                <div class="row mt-2">
-                                    <div class="col-md-3">Confirm Password</div>
-                                    <div class="col-md-9">
-                                        <input type="password" class="form-control txtConfirmPassword" />
-                                    </div>
-                                </div>
-                                <div class="row mt-2">
-                                    <div class="col-md-3">Valid From</div>
-                                    <div class="col-md-9">
-                                        <input type="text" class="form-control txtValidFrom nepdate-picker" />
-                                    </div>
-                                </div>
-                                <div class="row mt-2">
-                                    <div class="col-md-3">Valid To</div>
-                                    <div class="col-md-9">
-                                        <input type="text" class="form-control txtValidTo nepdate-picker" />
+                                        <input type="text" class="form-control txtCreatedDate nepdate-picker" />
                                     </div>
                                 </div>
                             </div>
@@ -133,13 +122,49 @@
                                         <input type="text" class="form-control txtAddress" />
                                     </div>
                                 </div>
+                                @* <div class="row mt-2">
+                                    <div class="col-md-3">Statement</div>
+                                    <div class="col-md-9">
+                                        <input type="text" class="form-control txtStatement" />
+                                    </div>
+                                </div> *@
                             </div>
                         </div>
                     </div>
+
+                    <div class="main-container">
+                        <div id="editor">                            
+                            <input type="text" class="form-control txtStatement" />
+                            @* <textarea  placeholder="why i am unable to write??????!!!!!!!!!!" class="form-control txtStatement"></textarea>                             *@
+                        </div>
+                    </div>
+                    
+
+
+
+                    @* <div class="col-md-12">
+                        <div class="card  ">
+                            <div class="row mt-1 ">
+                                <div class="col-md-9">
+                                    Statement
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="main-container">
+                                        <div id="editor">
+                                        <input type="text" class="form-control txtStatement" />
+                                            
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div> *@
                 </div>
             </div>
             <div class="modal-footer">
-                <input type="hidden" class="hdnId" value="0" />
+                <input type="hidden" class="hdnId" value=0 />
                 <button type="button" class="btn btn-secondary btnClose">Close</button>
                 <button type="button" class="btn btn-primary btnSave">Save changes</button>
             </div>
@@ -153,8 +178,10 @@
 @section LocalScripts {
     <script>
         $(document).ready(function () {
+            loadComplainType();
             loadData();
-            loadUserGroups();
+            currentDate();
+            // loadUserGroups();
         });
 
         $(document).on('click', '.btnSearch', function () {
@@ -177,28 +204,29 @@
             // var id = $('.hdnId').val();
 
             var obj = {
-                userID: $('.hdnId').val() || '0',
-                username: $('.txtUsername').val() || '',
-                userGroupId: $('.ddlUserGroup').val() || '0',
-                password: $('.txtPassword').val() || '',
-                confirmPassword: $('.txtConfirmPassword').val() || '',
-                validFrom: $('.txtValidFrom').val() || '',
-                validTo: $('.txtValidTo').val() || '',
+                complainId: +$('.hdnId').val() || '0',
+                customerNo: $('.txtCustomerNo').val() || '',
+                complainTypeCode: $('.ddlComplainType').val() || '0',
+                issueDate: $('.txtIssueDate').val() || '',
+                createdDate: $('.txtCreatedDate').val() || '',
                 fullname: $('.txtFullname').val() || '',
                 email: $('.txtEmail').val() || '',
                 contactNo: $('.txtContactNo').val() || '',
-                address: $('.txtAddress').val() || '',
+                address: $('.txtAddress').val() || ''
+                // contactNo: $('.txtContactNo').val() || '',
+                // address: $('.txtAddress').val() || '',
             };
 
-            if (obj.username == '') {
-                alert('Enter Username')
-            } else if (obj.userGroupId == '' || obj.userGroupId == '0') {
-                alert('Enter User Group Id')
-            } else {
+            if (obj.fullname == '') {
+                alert('Enter Fullname')
+            } else if (obj.complainTypeCode == '' || obj.complainTypeCode == '0') {
+                alert('Enter User complain Type Code ')
+            }
+            else {
                 $.ajax({
                     method: 'post',
                     contentType: "application/json; charset=utf-8",
-                    url: '@Url.Action("Save", "Users")',
+                    url: '@Url.Action("Save", "Complain")',
                     data: JSON.stringify(obj),
                     beforeSend: function () {
                         $.blockUI();
@@ -236,7 +264,7 @@
                 $.ajax({
                     method:'get',
                     contentType:'',
-                    url:'@Url.Action("Delete", "Users")?id=' + id,
+                    url:'@Url.Action("Delete", "Complain")?id=' + id,
                     beforeSend: function () { $.blockUI(); },
                     complete: function () { $.unblockUI(); },
                     error: function (err) { console.log(err); alert('Error Occured') },
@@ -259,7 +287,7 @@
             $.ajax({
                 method: 'get',
                 contentType: "application/json; charset=utf-8",
-                url: '@Url.Action("GetUserByID", "Users")?key=' + id,
+                url: '@Url.Action("GetUserByID", "Complain")?key=' + id,
                 success: function (res) {
                     if (res.success == true) {
 
@@ -269,7 +297,7 @@
                 // <input type="hidden" class="hdnId" value="0" />
                 $('.hdnId').val(res.data.userID) ,
                 $('.txtUsername').val(res.data.username) ,
-                $('.ddlUserGroup').val(res.data.userGroupId),
+                $('.ddlComplainType').val(res.data.userGroupId),
                 $('.txtPassword').val(res.data.password) ,
                 $('.txtConfirmPassword').val(res.data.password) ,
                 $('.txtValidFrom').val(res.data.validFrom),
@@ -300,7 +328,7 @@
 
         function clearForm() {
             $('.txtUsername').val('');
-            $('.ddlUserGroup').val('');
+            $('.ddlComplainType').val('');
             $('.txtPassword').val('');
             $('.txtConfirmPassword').val('');
             $('.txtValidFrom').val('');
@@ -314,30 +342,44 @@
 
 
 
-        function loadUserGroups() {
+        function loadComplainType() {
             $.ajax({
                 methodType: 'get',
                 contentType: "application/json; charset=utf-8",
-                url: '@Url.Action("GetAllData", "UserGroup")',
+                url: '@Url.Action("GetAllData", "ComplainType")',
                 success: function (res) {
                     if (res.success) {
                         var data = res.data;
 
                         var xyz = '<option value=0>--select--</option>';
                         $.each(data, function (i, x) {
-                            xyz += '<option value=' + x.userGroupID+ '>' + x.userGroupName + '</option>';
+                            xyz += '<option value=' + x.complainTypeCode + '>' + x.complainTypeName + '</option>';
                         });
-                        $('.ddlUserGroup').html(xyz);
+                        $('.ddlComplainType').html(xyz);
 
                     }
                 }
             })
         }
 
+
+        function currentDate() {
+            $('.nepdate-picker').nepaliDatePicker({
+                dateFormat: "YYYY-MM-DD", // Customize the format
+                closeOnDateSelect: true, // Close picker on date selection
+                minDate: "2000-01-01",   // Set minimum selectable date
+                maxDate: "2090-12-31"    // Set maximum selectable date
+            });
+
+            // Set the current date in Nepali format
+            const currentDate = NepaliFunctions.ConvertDateFormat(NepaliFunctions.GetCurrentBsDate(), "YYYY-MM-DD");
+            $('.txtCreatedDate').val(currentDate);
+        }
+
         function loadData() {
             var obj = {
-                username: $('.txtFilterUsername').val() || '',
-                contactNo: $('.txtFilterContactNo').val() || ''
+                username: $('.txtFullname').val() || '',
+                contactNo: $('.txtContactNo').val() || ''
             };
             $.ajax({
                 method: 'post',
@@ -351,6 +393,7 @@
                         var xyz = '';
                         $.each(data, function (i, x) {
                             xyz += '<tr>';
+                            xyz += '<td>' + x.complainId + '</td>';
                             xyz += '<td>' + x.fullname + '</td>';
                             xyz += '<td>' + x.email + '</td>';
                             xyz += '<td>' + x.contactNo + '</td>';
@@ -360,7 +403,7 @@
                             xyz += '<td>' + x.issueDate + '</td>';
                             xyz += '<td>' + x.createdDate + '</td>';
                             xyz += '<td>' + x.complainTypeID + '</td>';
-                            xyz += '<td><button type="button" class="btn btn-sm btn-secondary btnEdit" data-key=' + x.userID + '><i class="fa fa-edit"></i> Edit</button><button type="button" class="btn btn-sm btn-danger btnDelete" data-key=' + x.userID + '><i class="fa fa-trash"></i> Delete</button></td>';
+                            // xyz += '<td><button type="button" class="btn btn-sm btn-secondary btnEdit" data-key=' + x.complainId + '><i class="fa fa-edit"></i> Edit</button><button type="button" class="btn btn-sm btn-danger btnDelete" data-key=' + x.complainId + '><i class="fa fa-trash"></i> Delete</button></td>';
                             xyz += '</tr>';
                         });
                         $('.data-body').html(xyz);
