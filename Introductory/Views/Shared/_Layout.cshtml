@@ -64,11 +64,11 @@
     <script src="~/assets/js/app.min.js"></script>
     <script src="~/assets/libs/apexcharts/dist/apexcharts.min.js"></script>
     <script src="~/assets/libs/simplebar/dist/simplebar.js"></script>3
-    <script src="https://cdn.ckeditor.com/ckeditor5/44.1.0/ckeditor5.umd.js"></script>
+
     <script src="~/assets/js/dashboard.js"></script>
     <!-- solar icons -->
-    @* <script src="https://cdn.jsdelivr.net/npm/iconify-icon@1.0.8/dist/iconify-icon.min.js"></script> *@
-    <script src="https://cdn.ckeditor.com/ckeditor5/36.0.0/classic/ckeditor.js"></script>
+
+
     
     <script>
         toastr.options = {
@@ -99,40 +99,7 @@
         });
 
 
-        const {
-            ClassicEditor,
-            Essentials,
-            Bold,
-            Italic,
-            Font,
-            Paragraph
-        } = CKEDITOR;
 
-        ClassicEditor
-            .create(document.querySelector('#editor'), {
-                licenseKey: '<YOUR_LICENSE_KEY>', // Create a free account on 
-                plugins: [Essentials, Bold, Italic, Font, Paragraph],
-                toolbar: [
-                    'undo', 'redo', '|', 'bold', 'italic', '|',
-                    'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor'
-                ]
-            })
-            .then(editor => {
-                window.editor = editor;
-            })
-            .catch(error => {
-                console.error(error);
-            });
-        // ClassicEditor
-        //     .create(document.querySelector('#ckeditor-textarea'))
-        //     .then(editor => {
-        //         console.log('Editor is ready', editor);
-        //     })
-        //     .catch(error => {
-        //         console.error('Error initializing editor:', error);
-        //     });
-
-        // $('.search-ddl').select2();
     </script>
 
     @RenderSection("LocalScripts", required: false)

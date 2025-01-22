@@ -82,13 +82,13 @@ namespace Introductory.Controllers
                 {
                     var oldComplain = _context
                                     .Complain
-                                    .Where(x => x.Fullname == vm.Fullname)
+                                    .Where(x => x.ComplainId == vm.ComplainId)
                                     .FirstOrDefault();
 
 
-                    if (oldComplain == _context
+                    if (oldComplain != _context
                                     .Complain
-                                    .Where(x => x.Fullname == vm.Fullname)
+                                    .Where(x => x.Email == vm.Email)
                                     .FirstOrDefault()
                                     )
                     {
@@ -100,19 +100,19 @@ namespace Introductory.Controllers
                     }
                     else
                     {
-
-                        oldComplain.CustomerNo = vm.CustomerNo.ToInt32();
-                        oldComplain.IssueDate= vm.IssueDate.ToEnglishDate();
-                        oldComplain.CreatedDate = vm.CreatedDate.ToEnglishDate();
-                        oldComplain.Fullname = vm.Fullname.ToText();
-                        oldComplain.Email = vm.Email.ToText();
-                        oldComplain.ContactNo = vm.ContactNo.ToText();
-                        oldComplain.Statement = vm.Statement.ToText();
-                        oldComplain.Address = vm.Address.ToText();
-                        oldComplain.ComplainTypeID = vm.ComplainTypeID.ToInt32();
-                        _context.Complain.Add(oldComplain);
-
-                        _context.SaveChanges();
+                        Complain cp;
+                        cp = new Complain();
+                        //oldComplain.ComplainId = vm.ComplainId.ToInt32();
+                        cp.IssueDate= vm.IssueDate.ToEnglishDate();
+                        cp.CreatedDate = vm.CreatedDate.ToEnglishDate();
+                        cp.Fullname = vm.Fullname.ToText();
+                        cp.Email = vm.Email.ToText();
+                        cp.ContactNo = vm.ContactNo.ToText();
+                        cp.Statement = vm.Statement.ToText();
+                        cp.Address = vm.Address.ToText();
+                        cp.ComplainTypeID = vm.ComplainTypeID.ToInt32();
+                        _context.Complain.Add(cp);                                           
+                        _context.SaveChanges();                        
                         return Json(new
                         {
                             Success = true,

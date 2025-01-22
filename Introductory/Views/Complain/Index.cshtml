@@ -7,7 +7,7 @@
                 <div class="row">
                     <div class="col-md-3">
                         <label>Full Name</label><br />
-                        <input type="text" class="form-control txtFilterUsername" />
+                        <input type="text" class="form-control txtFilterFullName" />
                     </div>
                     <div class="col-md-3">
                         <label>Contact No</label><br />
@@ -122,45 +122,26 @@
                                         <input type="text" class="form-control txtAddress" />
                                     </div>
                                 </div>
-                                @* <div class="row mt-2">
+                                <div class="row mt-2">
                                     <div class="col-md-3">Statement</div>
                                     <div class="col-md-9">
                                         <input type="text" class="form-control txtStatement" />
                                     </div>
-                                </div> *@
+                                </div>
+                         
                             </div>
                         </div>
                     </div>
 
-                    <div class="main-container">
+                  @*   <div class="main-container">
                         <div id="editor">                            
                             <input type="text" class="form-control txtStatement" />
-                            @* <textarea  placeholder="why i am unable to write??????!!!!!!!!!!" class="form-control txtStatement"></textarea>                             *@
+                            <textarea  placeholder="why i am unable to write??????!!!!!!!!!!" class="form-control txtStatement"></textarea>                             
                         </div>
                     </div>
-                    
+                     *@
 
 
-
-                    @* <div class="col-md-12">
-                        <div class="card  ">
-                            <div class="row mt-1 ">
-                                <div class="col-md-9">
-                                    Statement
-                                </div>
-
-                                <div class="col-md-12">
-                                    <div class="main-container">
-                                        <div id="editor">
-                                        <input type="text" class="form-control txtStatement" />
-                                            
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div> *@
                 </div>
             </div>
             <div class="modal-footer">
@@ -180,7 +161,7 @@
         $(document).ready(function () {
             loadComplainType();
             loadData();
-            currentDate();
+            // currentDate();
             // loadUserGroups();
         });
 
@@ -203,18 +184,32 @@
 
             // var id = $('.hdnId').val();
 
+            // var obj = {
+            //     ComplainId: +$('.hdnId').val() || '0',
+            //     Fullname: $('.txtFullname').val() || '',
+            //     Email: $('.txtEmail').val() || '',
+            //     ContactNo: $('.txtContactNo').val() || '',
+            //     Statement: $('.txtStatement').val() || '',
+            //     Address: $('.txtAddress').val() || '',
+            //     CustomerNo: $('.txtCustomerNo').val() || '',
+            //     IssueDate: $('.txtIssueDate').val() || '',
+            //     CreatedDate: $('.txtCreatedDate').val() || '',
+            //     ComplainTypeID: $('.ddlComplainType').val() || '0'
+            //     // address: $('.txtAddress').val() || '',
+            // };
+
+
             var obj = {
-                complainId: +$('.hdnId').val() || '0',
-                customerNo: $('.txtCustomerNo').val() || '',
-                complainTypeCode: $('.ddlComplainType').val() || '0',
-                issueDate: $('.txtIssueDate').val() || '',
-                createdDate: $('.txtCreatedDate').val() || '',
-                fullname: $('.txtFullname').val() || '',
-                email: $('.txtEmail').val() || '',
-                contactNo: $('.txtContactNo').val() || '',
-                address: $('.txtAddress').val() || ''
-                // contactNo: $('.txtContactNo').val() || '',
-                // address: $('.txtAddress').val() || '',
+                ComplainId: +$('.hdnId').val() || 0,
+                Fullname: $('.txtFullname').val() || '',
+                Email: $('.txtEmail').val() || '',
+                ContactNo: $('.txtContactNo').val() || '',
+                Statement: $('.txtStatement').val() || '',
+                Address: $('.txtAddress').val() || '',
+                CustomerNo: +$('.txtCustomerNo').val() || 0,
+                IssueDate: $('.txtIssueDate').val() || '',
+                CreatedDate: $('.txtCreatedDate').val() || '',
+                ComplainTypeID: +$('.ddlComplainType').val() || 0
             };
 
             if (obj.fullname == '') {
@@ -248,7 +243,7 @@
                             toastr["error"](rsp.message, "ERROR");
                         }
                     }
-                });
+                })
             }
         });
 
@@ -327,16 +322,27 @@
 
 
         function clearForm() {
-            $('.txtUsername').val('');
-            $('.ddlComplainType').val('');
-            $('.txtPassword').val('');
-            $('.txtConfirmPassword').val('');
-            $('.txtValidFrom').val('');
-            $('.txtValidTo').val('');
+            // $('.txtUsername').val('');
+            // $('.ddlComplainType').val('');
+            // $('.txtPassword').val('');
+            // $('.txtConfirmPassword').val('');
+            // $('.txtValidFrom').val('');
+            // $('.txtValidTo').val('');
+            // $('.txtFullname').val('');
+            // $('.txtEmail').val('');
+            // $('.txtContactNo').val('');
+            // $('.txtAddress').val('');
+
             $('.txtFullname').val('');
             $('.txtEmail').val('');
             $('.txtContactNo').val('');
+            $('.txtStatement').val('');
             $('.txtAddress').val('');
+            +$('.txtCustomerNo').val('');
+            $('.txtIssueDate').val('');
+            $('.txtCreatedDate').val('');
+            $('.ddlComplainType').val('');
+            
 
         }
 
@@ -363,23 +369,23 @@
         }
 
 
-        function currentDate() {
-            $('.nepdate-picker').nepaliDatePicker({
-                dateFormat: "YYYY-MM-DD", // Customize the format
-                closeOnDateSelect: true, // Close picker on date selection
-                minDate: "2000-01-01",   // Set minimum selectable date
-                maxDate: "2090-12-31"    // Set maximum selectable date
-            });
+        // function currentDate() {
+        //     $('.nepdate-picker').nepaliDatePicker({
+        //         dateFormat: "YYYY-MM-DD", // Customize the format
+        //         closeOnDateSelect: true, // Close picker on date selection
+        //         minDate: "2000-01-01",   // Set minimum selectable date
+        //         maxDate: "2090-12-31"    // Set maximum selectable date
+        //     });
 
-            // Set the current date in Nepali format
-            const currentDate = NepaliFunctions.ConvertDateFormat(NepaliFunctions.GetCurrentBsDate(), "YYYY-MM-DD");
-            $('.txtCreatedDate').val(currentDate);
-        }
+        //     // Set the current date in Nepali format
+        //     const currentDate = NepaliFunctions.ConvertDateFormat(NepaliFunctions.GetCurrentBsDate(), "YYYY-MM-DD");
+        //     $('.txtCreatedDate').val(currentDate);
+        // }
 
         function loadData() {
             var obj = {
-                username: $('.txtFullname').val() || '',
-                contactNo: $('.txtContactNo').val() || ''
+                Fullname: $('.txtFilterFullName').val() || '',
+                ContactNo: $('.txtFilterContactNo').val() || ''
             };
             $.ajax({
                 method: 'post',
@@ -403,7 +409,7 @@
                             xyz += '<td>' + x.issueDate + '</td>';
                             xyz += '<td>' + x.createdDate + '</td>';
                             xyz += '<td>' + x.complainTypeID + '</td>';
-                            // xyz += '<td><button type="button" class="btn btn-sm btn-secondary btnEdit" data-key=' + x.complainId + '><i class="fa fa-edit"></i> Edit</button><button type="button" class="btn btn-sm btn-danger btnDelete" data-key=' + x.complainId + '><i class="fa fa-trash"></i> Delete</button></td>';
+                            
                             xyz += '</tr>';
                         });
                         $('.data-body').html(xyz);
