@@ -216,6 +216,7 @@
                         } else {
                             toastr["error"](rsp.message, "ERROR");
                         }
+                        loadData();
                     }
                 });
             }
@@ -341,6 +342,9 @@
                 contentType: "application/json; charset=utf-8",
                 url: '@Url.Action("GetAllData", "Users")',
                 data: JSON.stringify(obj),
+                beforeSend: function(){
+                    $.blockUI;
+                },
                 success: function (res) {
                     if (res.success) {
                         var data = res.data;
@@ -361,6 +365,9 @@
 
                         $('.dtTable').DataTable();
                     }
+                },
+                complete: function (){
+                    $.unblockUI();
                 }
             })
         }
