@@ -4,6 +4,7 @@ using Introductory.DAO;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Introductory.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250121022119_UserID in UsGr")]
+    partial class UserIDinUsGr
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,80 +24,6 @@ namespace Introductory.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("Introductory.Models.Complain", b =>
-                {
-                    b.Property<int>("ComplainId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ComplainId"));
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ComplainTypeID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ContactNo")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("CustomerNo")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Fullname")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("IssueDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Statement")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ComplainId");
-
-                    b.HasIndex("ComplainTypeID");
-
-                    b.ToTable("Complain");
-                });
-
-            modelBuilder.Entity("Introductory.Models.ComplainType", b =>
-                {
-                    b.Property<int>("ComplainTypeCode")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ComplainTypeCode"));
-
-                    b.Property<string>("ComplainTypeName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("IsActive")
-                        .HasColumnType("int");
-
-                    b.HasKey("ComplainTypeCode");
-
-                    b.ToTable("ComplainType");
-                });
 
             modelBuilder.Entity("Introductory.Models.Student", b =>
                 {
@@ -209,17 +138,6 @@ namespace Introductory.Migrations
                     b.ToTable("Users");
                 });
 
-<<<<<<< HEAD
-            modelBuilder.Entity("Introductory.Models.Complain", b =>
-                {
-                    b.HasOne("Introductory.Models.ComplainType", "ComplainType")
-                        .WithMany()
-                        .HasForeignKey("ComplainTypeID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ComplainType");
-=======
             modelBuilder.Entity("Introductory.Models.UserGroup", b =>
                 {
                     b.HasOne("Introductory.Models.Users", "Users")
@@ -227,7 +145,6 @@ namespace Introductory.Migrations
                         .HasForeignKey("Introductory.Models.UserGroup", "CreatedBy");
 
                     b.Navigation("Users");
->>>>>>> 21c06487289ce8a30898e37b8c443c9d3ac18f93
                 });
 
             modelBuilder.Entity("Introductory.Models.Users", b =>

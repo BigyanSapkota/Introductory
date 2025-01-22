@@ -1,16 +1,19 @@
 ﻿using Introductory.DAO;
+using Introductory.Helper;
 using Introductory.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Introductory.Controllers
 {
-    public class UserGroupController : Controller
+    public class UserGroupController : BaseController
     {
         ApplicationDbContext _context;
         public UserGroupController(ApplicationDbContext context)
         {
             _context = context;
         }
+        
         public IActionResult Index()
         {
             return View();
@@ -50,6 +53,7 @@ namespace Introductory.Controllers
                     ug.UserGroupName = name;
                     ug.UserGroupCode = code;
                     ug.CreatedDate = DateTime.Now;
+                    ug.CreatedBy = LoggedInUserID;
                     ug.IsActive = true;
 
 

@@ -1,4 +1,6 @@
-﻿namespace Introductory.Models.ViewModel
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Introductory.Models.ViewModel
 {
     public class UsersVM
     {
