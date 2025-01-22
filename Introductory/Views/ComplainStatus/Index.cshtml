@@ -1,0 +1,339 @@
+﻿
+
+
+<h1>ComplainStatus </h1>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label>ComplainStatus Name</label><br />
+                        <input type="text" class="form-control txtFilterComplainName" />
+                    </div>
+                    <div class="col-md-3">
+                        <label>Complain Status Code</label><br />
+                        <input type="text" class="form-control txtFilterComplainCode" />
+                    </div>
+                    <div class="col-md-3">
+                        <br />
+                        <button type="button" class="btn btn-primary btnSearch">
+                            <i class="fa fa-search"></i> Search
+                        </button>
+                        <button type="button" class="btn btn-success btnNew">
+                            <i class="fa fa-plus"></i> NEW
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <table class="table table-striped table-hover dtTable">
+                    <thead>
+                        <tr>
+                           
+                            <th>Complain Status ID</th>
+                            <th>Complain Status Name</th>
+                            <th>Complain Status Code</th>
+                            <th>Created Date</th>
+                            <th>Created By</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="data-body">
+                         
+                         Table Body
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+        <!-- Modal -->
+        <div class="modal fade" id="mdlSetup" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Complain Status</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-3">Complain Status Name</div>
+                                            <div class="col-md-9">
+                                                <input type="text" class="form-control txtComplainName" />
+                                            </div>
+                                        </div>
+                                        <div class="row mt-2">
+                                            <div class="col-md-3">Complain Status Code</div>
+                                            <div class="col-md-9">
+                                                <input type="text" class="form-control txtComplainCode" />
+                                                </>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6"></div>
+                            <div class="col-md-6">
+                                <button type="button" class="btn btn-secondary btnClose">Close</button>
+                                <button type="button" class="btn btn-primary btnSave">Save changes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+        @* <div class="modal fade" id="mdlEdit" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"> *@
+        @*     <div class="modal-dialog modal-md"> *@
+        @*         <div class="modal-content"> *@
+        @*             <div class="modal-header"> *@
+        @*                 <h1 class="modal-title fs-5" id="exampleModalLabel">Complain Status</h1> *@
+        @*                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> *@
+        @*             </div> *@
+        @*             <div class="modal-body"> *@
+        @*                 <div class="row"> *@
+        @*                     <div class="col-md-12"> *@
+        @*                         <div class="card"> *@
+        @*                             <div class="card-body"> *@
+        @*                                 <div class="row"> *@
+        @*                                     <div class="col-md-3">Complain Status Name</div> *@
+        @*                                     <div class="col-md-9"> *@
+        @*                                         <input type="text" class="form-control txtComplainNamee" /> *@
+        @*                                     </div> *@
+        @*                                 </div> *@
+        @*                                 <div class="row mt-2"> *@
+        @*                                     <div class="col-md-3">Complain Status Code</div> *@
+        @*                                     <div class="col-md-9"> *@
+        @*                                         <input type="text" class="form-control txtComplainCodee" /> *@
+        @*                                         </> *@
+        @*                                     </div> *@
+        @*                                 </div> *@
+        @*                             </div> *@
+        @*                         </div> *@
+        @*                     </div> *@
+
+        @*                     <div class="col-md-6"></div> *@
+        @*                     <div class="col-md-6"> *@
+        @*                         <button type="button" class="btn btn-secondary btnClose">Close</button> *@
+        @*                         <button type="button" class="btn btn-primary btnSave">Save changes</button> *@
+        @*                     </div> *@
+        @*                 </div> *@
+        @*             </div> *@
+        @*         </div> *@
+
+
+
+
+
+
+
+
+
+
+
+
+ @section LocalScripts{
+     <script>
+
+          $(document).ready(function () {
+            loadData();
+        });
+
+        $(document).on('click', '.btnNew', function () {
+          $('#mdlSetup').modal('show');
+        });
+
+         $(document).on('click', '.btnClose', function () {
+            var ok = confirm('Are you sure to clear form?')
+            if (ok) {
+                clearForm();
+                 $('#mdlSetup').modal('hide');
+            }
+        })
+
+
+         $(document).on('click', '.btnSearch', function () {
+            loadData();
+        })
+
+
+         $(document).on('click', '.btnSave', function () {
+            var obj = {
+                complainStatusName: $('.txtComplainName').val() || '',
+                complainStatusCode: $('.txtComplainCode').val() || '',
+            };
+
+            if (obj.complainStatusName == '') {
+                alert('Enter Complain Status Name ')
+            } else if (obj.complainStatusCode == '') {
+                alert('Enter Complain Status Code')
+            } else {
+                $.ajax({
+                    method: 'post',
+                    contentType: "application/json; charset=utf-8",
+                    url: '@Url.Action("Save", "ComplainStatus")',
+                    data: JSON.stringify(obj),
+                    beforeSend: function () {
+                        $.blockUI();
+                    },
+                    complete: function () {
+                        $.unblockUI()
+                    },
+                    error: function (err) {
+                        console.log(err);
+                        alert('Error Occured!!')
+                    },
+                    success: function (rsp) {
+                        if (rsp.success) {
+                            toastr["success"](rsp.message, "OK");
+                            clearForm();
+                            $('#mdlSetup').modal('hide');
+                        } else {
+                            toastr["error"](rsp.message, "ERROR");
+                        }
+                    }
+                });
+            }
+        });
+
+
+
+        
+        $(document).on('click', '.btnDelete', function () {
+            var id = $(this).data('key');
+            var result= confirm('Are you sure to delete data?');
+            if(result == true){
+                $.ajax({
+                    method:'get',
+                    contentType:"application/json; charset=utf-8",
+                    url:'@Url.Action("Delete","ComplainStatus")?id=' + id,
+                    beforeSend: function () { $.blockUI(); },
+                    complete: function () { $.unblockUI(); },
+                    error: function (err) { console.log(err); alert('Error Occured') },
+                    success: function (rsp) {
+                        if (rsp.success) {
+                            toastr["success"](rsp.message, "OK");
+                            loadData();
+                        } else {
+                            toastr["error"](rsp.message, "ERROR");
+                        }
+                    }
+                })
+            }
+        })
+
+
+
+
+
+        
+        // $(document).on('click', '.btnEdit', function () {
+        //     var id = $(this).data('key');
+         
+        //     $.ajax({
+        //         method: 'get',
+        //         contentType: "application/json; charset=utf-8",
+        //         url: '@Url.Action("GetComplainByID", "ComplainStatus")?key=' + id,
+        //         success: function (res) {
+        //             if (res.success == true) {
+        //                   $('#mdlEdit').modal('show');
+                              
+        //                 $('.txtComplainName').val(res.data.complainStatusName);
+        //                 $('.txtComplainCode').val(res.data.complainStatusCode);
+
+        //                 $('.hdnId').val(res.data.complainStatusID);
+
+        //                 res.data.IsActive = false;
+                        
+
+        //             } else {
+        //                 toastr["error"](res.message, "ERROR")
+        //             }
+        //         },
+        //         error: function (err) {
+        //             console.log(err); alert('Error Occured')
+        //         },
+        //         beforeSend: function () {
+        //             $.blockUI();
+        //         },
+        //         complete: function () {
+        //             $.unblockUI();
+        //         }
+        //     })
+
+        // });
+
+
+
+
+
+
+
+        function loadData() {
+            var obj = {
+                complainStatusName: $('.txtFilterComplainName').val() || '',
+                complainStatusCode: $('.txtFilterComplainCode').val() || ''
+            };
+            $.ajax({
+                method: 'post',
+                contentType: "application/json; charset=utf-8",
+                url: '@Url.Action("GetAllData", "ComplainStatus")',
+                data: JSON.stringify(obj),
+                success: function (res) {
+                    if (res.success) {
+                        var data = res.data;
+
+                        var xyz = '';
+                        $.each(data, function (i, x) {
+                            xyz += '<tr>';
+                          
+                            xyz += '<td>' + x.complainStatusID + '</td>';
+                            xyz += '<td>' + x.complainStatusName + '</td>';
+                            xyz += '<td>' + x.complainStatusCode + '</td>';
+                            xyz += '<td>' + x.createdDate + '</td>';
+                            xyz += '<td>' + x.createdBy + '</td>';
+                                            xyz += '<td><button type="button" class="btn btn-sm btn-secondary btnEdit" data-key=' + x.complainStatusID + ' ><i class="fa fa-edit"></i></button><button type="button" class="btn btn-sm btn-danger btnDelete" data-key=' + x.complainStatusID + '><i class="fa fa-trash"></i></button></td>';
+                            xyz += '</tr>';
+                        });
+                        $('.data-body').html(xyz);
+
+
+                        $('.dtTable').DataTable();
+                    }
+                }
+            })
+        }
+
+
+
+
+
+
+         function clearForm() {
+            $('.txtComplainName').val('');
+            $('.txtComplainCode').val('');
+
+        }
+
+
+     </script>
+ };
