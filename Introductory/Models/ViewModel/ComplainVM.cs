@@ -11,6 +11,7 @@
         public int CustomerNo { get; set; }
         public string IssueDate { get; set; }
         public string CreatedDate { get; set; }
-        public int ComplainTypeID { get; set; }       
+        public int ComplainTypeID { get; set; }  
+        public string ComplainTypeName { get; set; }
     }
 }

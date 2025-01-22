@@ -11,21 +11,21 @@ namespace Introductory.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "ComplainType",
-                columns: table => new
-                {
-                    ComplainTypeCode = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ComplainTypeName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IsActive = table.Column<int>(type: "int", nullable: false),
-                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ComplainType", x => x.ComplainTypeCode);
-                });
+            //migrationBuilder.CreateTable(
+            //    name: "ComplainType",
+            //    columns: table => new
+            //    {
+            //        ComplainTypeCode = table.Column<int>(type: "int", nullable: false)
+            //            .Annotation("SqlServer:Identity", "1, 1"),
+            //        ComplainTypeName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+            //        IsActive = table.Column<int>(type: "int", nullable: false),
+            //        CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
+            //        CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+            //    },
+            //    constraints: table =>
+            //    {
+            //        table.PrimaryKey("PK_ComplainType", x => x.ComplainTypeCode);
+            //    });
 
             migrationBuilder.CreateTable(
                 name: "Complain",
@@ -66,8 +66,8 @@ namespace Introductory.Migrations
             migrationBuilder.DropTable(
                 name: "Complain");
 
-            migrationBuilder.DropTable(
-                name: "ComplainType");
+            //migrationBuilder.DropTable(
+            //    name: "ComplainType");
         }
     }
 }

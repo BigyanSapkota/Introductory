@@ -45,6 +45,7 @@ namespace Introductory.Controllers
                                         CreatedDate = s.CreatedDate.ToNepaliDate(),
                                         IssueDate = s.IssueDate.ToNepaliDate(),
                                         ComplainTypeID = s.ComplainTypeID.ToInt32(),
+                                        ComplainTypeName = s.ComplainType.ComplainTypeName.ToText()
                                     })
                                     .ToList();
             return Json(new

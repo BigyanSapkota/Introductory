@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Introductory.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250121100301_FirstMigration")]
-    partial class FirstMigration
+    [Migration("20250122020224_adesh addition")]
+    partial class adeshaddition
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -137,30 +137,27 @@ namespace Introductory.Migrations
 
             modelBuilder.Entity("Introductory.Models.ComplainType", b =>
                 {
-                    b.Property<int>("ComplainTypeID")
+                    b.Property<int>("ComplainTypeCode")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ComplainTypeID"));
-
-                    b.Property<string>("ComplainTypeCode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ComplainTypeCode"));
 
                     b.Property<string>("ComplainTypeName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("CreatedBy")
-                        .HasColumnType("int");
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("CreatedDate")
+                    b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
+                    b.Property<int>("IsActive")
+                        .HasColumnType("int");
 
-                    b.HasKey("ComplainTypeID");
+                    b.HasKey("ComplainTypeCode");
 
                     b.ToTable("ComplainType");
                 });
@@ -201,6 +198,9 @@ namespace Introductory.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserGroupID"));
 
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
@@ -216,6 +216,10 @@ namespace Introductory.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UserGroupID");
+
+                    b.HasIndex("CreatedBy")
+                        .IsUnique()
+                        .HasFilter("[CreatedBy] IS NOT NULL");
 
                     b.ToTable("UserGroup");
                 });
@@ -299,6 +303,15 @@ namespace Introductory.Migrations
                     b.Navigation("Complain");
 
                     b.Navigation("ComplainStatus");
+                });
+
+            modelBuilder.Entity("Introductory.Models.UserGroup", b =>
+                {
+                    b.HasOne("Introductory.Models.Users", "Users")
+                        .WithOne()
+                        .HasForeignKey("Introductory.Models.UserGroup", "CreatedBy");
+
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("Introductory.Models.Users", b =>

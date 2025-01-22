@@ -17,8 +17,6 @@ namespace Introductory.DAO
         public DbSet<Complain> Complain { get; set; }
         public DbSet<ComplainStatus> ComplainStatus { get; set; }
         public DbSet<ComplainType> ComplainType { get; set; }
-        public DbSet<ComplainType> ComplainType { get; set; }
-        public DbSet<Complain> Complain { get; set; }
 
     }
 }
