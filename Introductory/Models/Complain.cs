@@ -6,7 +6,7 @@ namespace Introductory.Models
     public class Complain
     {
         [Key]
-        public int ComplainId { get; set; }
+        public int ComplainID { get; set; }
         public string Fullname { get; set; }
         public string Email { get; set; }
         public string ContactNo { get; set; }

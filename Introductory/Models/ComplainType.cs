@@ -5,7 +5,7 @@ namespace Introductory.Models
     public class ComplainType
     {
         [Key]
-        public int ComplainTypeId { get; set; }
+        public int ComplainTypeID { get; set; }
         public string ComplainTypeName { get; set; }
         public string ComplainTypeCode { get; set; }
         public int IsActive { get; set; }
